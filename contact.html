@@ -412,6 +412,7 @@
         <!-- Right: form -->
         <div class="reveal delay-2">
           <form id="contact-form" onsubmit="handleContactSubmit(event)"
+                action="https://formspree.io/f/xeewvrae" method="POST"
                 class="space-y-4"
                 style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:36px;">
 
@@ -509,8 +510,33 @@
 
     function handleContactSubmit(e) {
       e.preventDefault();
-      document.getElementById('form-msg').style.display = 'block';
-      document.getElementById('contact-form').reset();
+      var form = document.getElementById('contact-form');
+      var btn = form.querySelector('button[type="submit"]');
+      var msg = document.getElementById('form-msg');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      fetch('https://formspree.io/f/xeewvrae', {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(function(r) {
+        if (r.ok) {
+          msg.textContent = 'Message sent!';
+          msg.style.display = 'block';
+          form.reset();
+        } else {
+          msg.textContent = 'Something went wrong — please try again.';
+          msg.style.color = '#e8252c';
+          msg.style.display = 'block';
+        }
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      }).catch(function() {
+        msg.textContent = 'Something went wrong — please try again.';
+        msg.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      });
     }
 
     (function() {
