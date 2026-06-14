@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — AZ Music Studios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&family=Karla:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#17182A',
+              mid:  '#70829B',
+              red:  '#E8252C',
+            }
+          },
+          fontFamily: {
+            display: ['Anton', 'sans-serif'],
+            heading: ['Poppins', 'sans-serif'],
+            body:    ['Karla', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #17182A; }
+    ::-webkit-scrollbar-thumb { background: #E8252C; border-radius: 3px; }
+
+    html { scroll-behavior: smooth; }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: #E8252C;
+      transition: width 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    .social-icon { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease; }
+    .social-icon:hover { transform: scale(1.3); }
+
+    .waveform-line {
+      background: linear-gradient(90deg, transparent 0%, #E8252C 30%, #E8252C 70%, transparent 100%);
+      height: 2px;
+    }
+
+    /* Hero */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-text { animation: fadeUp 1s cubic-bezier(0.4,0,0.2,1) 0.2s both; }
+    .hero-sub  { animation: fadeUp 1s cubic-bezier(0.4,0,0.2,1) 0.45s both; }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-28px);
+      transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(28px);
+      transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* Stat cards */
+    .stat-item {
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .stat-item:hover { transform: translateY(-4px); }
+
+    /* Artist chips */
+    .artist-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.65);
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .artist-chip:before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #E8252C;
+      flex-shrink: 0;
+    }
+    .artist-chip:hover {
+      background: rgba(232,37,44,0.1);
+      border-color: rgba(232,37,44,0.3);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Gear row */
+    .gear-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      background: rgba(232,37,44,0.08);
+      border: 1px solid rgba(232,37,44,0.18);
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: rgba(232,37,44,0.9);
+      text-transform: uppercase;
+    }
+
+    /* Divider line */
+    .section-rule {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(112,130,155,0.15), transparent);
+    }
+  </style>
+</head>
+<body class="bg-brand-dark font-body text-white overflow-x-hidden">
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <header id="top" class="fixed top-0 left-0 right-0 z-50" style="background: rgba(23,24,42,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(112,130,155,0.12);">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-28">
+      <a href="index.html" class="flex-shrink-0 block overflow-hidden" style="height: 76px; width: 240px;">
+        <img src="Brand_assets/Logo-White.png" alt="AZ Music Studios" style="height: 360px; width: auto; max-width: none; margin-top: -140px; margin-left: -109px;" />
+      </a>
+
+      <ul class="hidden md:flex items-center gap-8 font-heading text-sm font-medium tracking-wide text-white/70">
+        <li><a href="services.html" class="nav-link hover:text-white transition-colors duration-200">Services</a></li>
+        <li><a href="about.html"    class="nav-link text-white transition-colors duration-200">About</a></li>
+        <li><a href="studio.html" class="nav-link hover:text-white transition-colors duration-200">Studio</a></li>
+        <li><a href="music.html"   class="nav-link hover:text-white transition-colors duration-200">Music</a></li>
+        <li><a href="films.html" class="nav-link hover:text-white transition-colors duration-200">AZ Films</a></li>
+        <li><a href="courses.html"       class="nav-link hover:text-white transition-colors duration-200">Courses</a></li>
+        <li><a href="consultation.html" class="nav-link hover:text-white transition-colors duration-200">Consultation</a></li>
+        <li><a href="contact.html" class="nav-link hover:text-white transition-colors duration-200">Contact</a></li>
+      </ul>
+
+      <div class="hidden md:flex flex-col items-end gap-2">
+        <a href="index.html#contact"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red text-white text-sm font-heading font-semibold rounded tracking-wide transition-opacity duration-200 hover:opacity-90"
+           style="box-shadow: 0 4px 20px rgba(232,37,44,0.35);">
+          Book a Session
+        </a>
+        <div class="flex items-center gap-3">
+          <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+          </a>
+          <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Open menu">
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+      </button>
+    </nav>
+
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-6 font-heading text-sm font-medium space-y-4 text-white/80 border-t border-white/10 pt-4">
+      <a href="services.html" class="block hover:text-white transition-colors">Services</a>
+      <a href="about.html"    class="block text-white">About</a>
+      <a href="studio.html" class="block hover:text-white transition-colors">Studio</a>
+      <a href="courses.html"       class="block hover:text-white transition-colors">Courses</a>
+      <a href="consultation.html" class="block hover:text-white transition-colors">Consultation</a>
+      <a href="contact.html" class="block hover:text-white transition-colors">Contact</a>
+      <a href="index.html#contact" class="inline-block mt-2 px-5 py-2.5 bg-brand-red text-white rounded text-sm font-semibold tracking-wide">Book a Session</a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO — FULL-BLEED STUDIO IMAGE
+  ============================================================ -->
+  <section class="relative" style="min-height: 88vh;">
+    <!-- Studio photo -->
+    <div class="absolute inset-0">
+      <img src="Images/Wide 2.jpg" alt="AZ Music Studios control room" class="w-full h-full object-cover object-center" />
+      <!-- Gradient overlay: transparent top → fully opaque brand-dark bottom -->
+      <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(23,24,42,0.55) 0%, rgba(23,24,42,0.1) 35%, rgba(23,24,42,0.1) 50%, rgba(23,24,42,0.75) 75%, rgba(23,24,42,1) 100%);"></div>
+      <!-- Subtle red color wash -->
+      <div class="absolute inset-0" style="background: rgba(232,37,44,0.04); mix-blend-mode: screen;"></div>
+      <!-- Grain texture -->
+      <svg class="absolute inset-0 w-full h-full opacity-[0.025] pointer-events-none" aria-hidden="true">
+        <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+        <rect width="100%" height="100%" filter="url(#grain)" />
+      </svg>
+    </div>
+
+    <!-- Nav top bar gradient so logo is readable -->
+    <div class="absolute top-0 left-0 right-0 h-40 pointer-events-none" style="background: linear-gradient(to bottom, rgba(23,24,42,0.7) 0%, transparent 100%);"></div>
+
+    <!-- Hero text at bottom of image -->
+    <div class="absolute bottom-0 left-0 right-0 px-6 pb-14 lg:pb-20">
+      <div class="max-w-5xl mx-auto">
+        <div class="hero-sub mb-3">
+          <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Since 2016 &nbsp;·&nbsp; Montreal, QC</span>
+        </div>
+        <h1 class="hero-text font-display leading-none" style="font-size: clamp(56px, 10vw, 112px); letter-spacing: -0.02em;">
+          AZ MUSIC
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STATS BAR
+  ============================================================ -->
+  <section style="border-bottom: 1px solid rgba(255,255,255,0.07); background: rgba(0,0,0,0.25);">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+      <div class="grid grid-cols-3">
+
+        <div class="reveal stat-item py-10 px-6 text-center" style="border-right: 1px solid rgba(255,255,255,0.06);">
+          <div class="font-display text-4xl text-brand-red mb-1" style="letter-spacing:-0.01em;">2016</div>
+          <div class="font-heading text-xs font-semibold tracking-[0.18em] uppercase text-white/35">Founded</div>
+        </div>
+
+        <div class="reveal delay-1 stat-item py-10 px-6 text-center" style="border-right: 1px solid rgba(255,255,255,0.06);">
+          <div class="font-display text-4xl text-brand-red mb-1" style="letter-spacing:-0.01em;">20M+</div>
+          <div class="font-heading text-xs font-semibold tracking-[0.18em] uppercase text-white/35">Streams</div>
+        </div>
+
+        <div class="reveal delay-2 stat-item py-10 px-6 text-center">
+          <div class="font-display text-4xl text-brand-red mb-1" style="letter-spacing:-0.01em;">MTL</div>
+          <div class="font-heading text-xs font-semibold tracking-[0.18em] uppercase text-white/35">Montreal, QC</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT CONTENT
+  ============================================================ -->
+  <section class="py-28 relative overflow-hidden">
+    <!-- Background ambient glow -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:10%;left:-5%;width:45%;height:50%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.04) 0%,transparent 65%);"></div>
+      <div style="position:absolute;bottom:15%;right:-5%;width:40%;height:45%;background:radial-gradient(ellipse at center,rgba(112,130,155,0.04) 0%,transparent 65%);"></div>
+    </div>
+
+    <div class="relative max-w-3xl mx-auto px-6 lg:px-8">
+
+      <!-- Section label -->
+      <div class="reveal flex items-center gap-3 mb-14">
+        <div class="waveform-line w-8"></div>
+        <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">Our Story</span>
+        <div class="waveform-line w-8"></div>
+      </div>
+
+      <!-- ── Paragraph 1: Origin ── -->
+      <div class="reveal mb-14">
+        <p class="font-body text-white/70 text-lg leading-relaxed" style="line-height: 1.85;">
+          Founded in 2016 in Montreal by Anthony Zappavigna, AZ Music is a recording studio built on a simple belief: great records come from the meeting of great talent and great tools. From day one, the studio has been a home for artists who take their craft seriously, and a space where ideas turn into finished, release-ready music.
+        </p>
+      </div>
+
+      <div class="reveal section-rule mb-14"></div>
+
+      <!-- ── Paragraph 2: Artists & Credits ── -->
+      <div class="reveal mb-8">
+        <p class="font-body text-white/70 text-lg leading-relaxed mb-10" style="line-height: 1.85;">
+          Over the years, AZ Music has had the privilege of working with some of Montreal's most respected artists. Those collaborations have spanned everything from production to mixing, and the results speak for themselves — the studio's credits now total more than 20 million streams, with a strong track record on radio worldwide.
+        </p>
+      </div>
+
+      <!-- Artist name chips -->
+      <div class="reveal delay-1 flex flex-wrap gap-2.5 mb-14">
+        <span class="artist-chip">Ruffsound</span>
+        <span class="artist-chip">Sans Pression</span>
+        <span class="artist-chip">Ced Auger</span>
+        <span class="artist-chip">Gabriel Fredette</span>
+        <span class="artist-chip">& many more</span>
+      </div>
+
+      <div class="reveal section-rule mb-14"></div>
+
+      <!-- ── Paragraph 3: Gear ── -->
+      <div class="reveal mb-6">
+        <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-white/30 block mb-6">The Signal Chain</span>
+        <p class="font-body text-white/70 text-lg leading-relaxed mb-8" style="line-height: 1.85;">
+          Sound quality starts with the signal chain, and AZ Music doesn't cut corners. The studio is equipped with a Neumann U87 microphone running through Neve preamps and compression, monitored on Barefoot and Yamaha reference monitors for translation you can trust. A deep library of plugins is available for any session, alongside a full complement of instruments, electric and acoustic guitars, and an Arturia KeyLab 88 with a real-feel touch that piano players actually enjoy playing.
+        </p>
+      </div>
+
+      <!-- Gear pills -->
+      <div class="reveal delay-1 flex flex-wrap gap-2 mb-14">
+        <span class="gear-pill">Neumann U87</span>
+        <span class="gear-pill">Neve 1081 Pre-amp</span>
+        <span class="gear-pill">Neve 2254/R</span>
+        <span class="gear-pill">Barefoot Monitors</span>
+        <span class="gear-pill">Yamaha Monitors</span>
+        <span class="gear-pill">Arturia KeyLab 88</span>
+        <span class="gear-pill">Electric &amp; Acoustic Guitars</span>
+      </div>
+
+      <div class="reveal section-rule mb-14"></div>
+
+      <!-- ── Paragraph 4: Closing ── -->
+      <div class="reveal">
+        <p class="font-body text-white/70 text-lg leading-relaxed" style="line-height: 1.85;">
+          Whether you're tracking, producing, or mixing, AZ Music offers the gear, the experience, and the proven results to help your music compete at the highest level. Welcome to the studio.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA BAND
+  ============================================================ -->
+  <section class="relative py-24 overflow-hidden" style="background: rgba(232,37,44,0.06); border-top: 1px solid rgba(232,37,44,0.12); border-bottom: 1px solid rgba(232,37,44,0.12);">
+    <div class="reveal max-w-2xl mx-auto px-6 text-center">
+      <h2 class="font-display text-4xl md:text-5xl leading-none mb-5" style="letter-spacing:-0.02em;">
+        READY TO MAKE<br/><span class="text-brand-red">YOUR RECORD?</span>
+      </h2>
+      <p class="font-body text-white/55 text-base mb-8" style="line-height:1.75;">
+        Get in touch and we'll respond within 24 hours to set up your session.
+      </p>
+      <a href="index.html#contact"
+         class="inline-flex items-center gap-2 px-10 py-4 bg-brand-red text-white font-heading font-semibold text-sm tracking-wider rounded transition-opacity duration-200 hover:opacity-90"
+         style="box-shadow: 0 8px 32px rgba(232,37,44,0.4);">
+        Book a Session
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.2);">
+    <div style="border-bottom:1px solid rgba(255,255,255,0.06);" class="py-12">
+      <div class="max-w-xl mx-auto px-6 text-center">
+        <p class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red mb-2">Stay in the loop</p>
+        <h3 class="font-display text-2xl mb-2" style="letter-spacing:-0.01em;">JOIN THE MAILING LIST</h3>
+        <p class="font-body text-white/40 text-sm mb-6" style="line-height:1.7;">New releases, studio news, and exclusive content — straight to your inbox.</p>
+        <form id="mail-form" class="flex gap-2 max-w-sm mx-auto"
+              onsubmit="event.preventDefault();document.getElementById('subscribe-msg').style.display='block';this.reset();">
+          <input type="email" placeholder="your@email.com" required
+            class="flex-1 px-4 py-3 rounded font-body text-sm text-white placeholder-white/30 focus:outline-none"
+            style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:border-color 0.2s ease;"
+            onfocus="this.style.borderColor='#E8252C'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" />
+          <button type="submit"
+            class="px-5 py-3 bg-brand-red text-white font-heading font-semibold text-sm rounded hover:opacity-90"
+            style="transition:opacity 0.2s ease;box-shadow:0 4px 20px rgba(232,37,44,0.3);flex-shrink:0;">
+            Subscribe
+          </button>
+        </form>
+        <p id="subscribe-msg" class="font-body text-xs mt-3 text-brand-red" style="display:none;">You're on the list!</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="font-body text-white/30 text-sm text-center">© 2026 AZ Music Studios. All rights reserved. Montreal, QC.</p>
+      <div class="flex items-center gap-5">
+        <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+        </a>
+        <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile menu toggle -->
+  <script>
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
+
+  <!-- Scroll reveal -->
+  <script>
+    (function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.10 });
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
+  </script>
+
+</body>
+</html>

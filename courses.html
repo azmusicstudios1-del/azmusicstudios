@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Courses — AZ Music Studios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&family=Karla:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { dark:'#17182A', mid:'#70829B', red:'#E8252C' } },
+          fontFamily: {
+            display: ['Anton','sans-serif'],
+            heading: ['Poppins','sans-serif'],
+            body:    ['Karla','sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:#17182A; }
+    ::-webkit-scrollbar-thumb { background:#E8252C; border-radius:3px; }
+    html { scroll-behavior:smooth; }
+
+    .nav-link { position:relative; }
+    .nav-link::after {
+      content:''; position:absolute; bottom:-2px; left:0;
+      width:0; height:2px; background:#E8252C;
+      transition:width 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .nav-link:hover::after { width:100%; }
+    .social-icon { transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease; }
+    .social-icon:hover { transform:scale(1.3); }
+    .waveform-line {
+      background:linear-gradient(90deg,transparent 0%,#E8252C 30%,#E8252C 70%,transparent 100%);
+      height:2px;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity:0; transform:translateY(28px);
+      transition:opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .delay-1 { transition-delay:0.1s; }
+    .delay-2 { transition-delay:0.2s; }
+    .delay-3 { transition-delay:0.3s; }
+    .delay-4 { transition-delay:0.4s; }
+
+    /* Hero anim */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .ha1 { animation:fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.1s both; }
+    .ha2 { animation:fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.3s both; }
+    .ha3 { animation:fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.5s both; }
+
+    /* Bullet dots */
+    .learn-item {
+      display:flex; align-items:flex-start; gap:12px;
+      padding:10px 0;
+    }
+    .learn-dot {
+      width:6px; height:6px; border-radius:50%;
+      background:#E8252C; flex-shrink:0; margin-top:8px;
+    }
+
+    /* Course cards */
+    .course-card {
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      overflow:hidden;
+      transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+    }
+    .course-card:hover {
+      transform:translateY(-6px);
+      box-shadow:0 24px 60px rgba(0,0,0,0.5), 0 8px 24px rgba(232,37,44,0.15);
+    }
+
+    /* Sale badge */
+    .sale-badge {
+      background:#E8252C;
+      color:white;
+      font-family:'Poppins',sans-serif;
+      font-weight:700;
+      font-size:11px;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      padding:8px 16px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+
+    /* Feature row */
+    .feat-item {
+      display:flex; align-items:flex-start; gap:10px;
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      font-family:'Karla',sans-serif;
+      font-size:12px;
+      letter-spacing:0.04em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,0.5);
+      line-height:1.5;
+    }
+    .feat-item:last-child { border-bottom:none; }
+    .feat-circle {
+      width:18px; height:18px; border-radius:50%;
+      border:1px solid rgba(232,37,44,0.5);
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; margin-top:1px;
+    }
+
+    /* Book button */
+    .book-btn {
+      display:block; width:100%;
+      background:#17182A;
+      border:2px solid white;
+      color:white;
+      font-family:'Poppins',sans-serif;
+      font-weight:700;
+      font-size:13px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      text-align:center;
+      padding:14px 24px;
+      border-radius:6px;
+      transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .book-btn:hover {
+      background:#E8252C;
+      border-color:#E8252C;
+      color:white;
+    }
+
+    /* Sub-list indent */
+    .sub-list { padding-left:20px; margin-top:6px; }
+    .sub-list li {
+      list-style:none; position:relative; padding-left:14px;
+      font-family:'Karla',sans-serif; font-size:14px;
+      color:rgba(255,255,255,0.5); line-height:1.9;
+    }
+    .sub-list li::before {
+      content:'—'; position:absolute; left:0;
+      color:rgba(232,37,44,0.5); font-size:11px; top:3px;
+    }
+  </style>
+</head>
+<body class="bg-brand-dark font-body text-white overflow-x-hidden">
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <header id="top" class="fixed top-0 left-0 right-0 z-50" style="background:rgba(23,24,42,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(112,130,155,0.12);">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-28">
+      <a href="index.html" class="flex-shrink-0 block overflow-hidden" style="height:76px;width:240px;">
+        <img src="Brand_assets/Logo-White.png" alt="AZ Music Studios" style="height:360px;width:auto;max-width:none;margin-top:-140px;margin-left:-109px;" />
+      </a>
+      <ul class="hidden md:flex items-center gap-8 font-heading text-sm font-medium tracking-wide text-white/70">
+        <li><a href="services.html"      class="nav-link hover:text-white transition-colors duration-200">Services</a></li>
+        <li><a href="about.html"         class="nav-link hover:text-white transition-colors duration-200">About</a></li>
+        <li><a href="studio.html"        class="nav-link hover:text-white transition-colors duration-200">Studio</a></li>
+        <li><a href="music.html"         class="nav-link hover:text-white transition-colors duration-200">Music</a></li>
+        <li><a href="films.html" class="nav-link hover:text-white transition-colors duration-200">AZ Films</a></li>
+        <li><a href="courses.html"       class="nav-link text-white transition-colors duration-200">Courses</a></li>
+        <li><a href="consultation.html"  class="nav-link hover:text-white transition-colors duration-200">Consultation</a></li>
+        <li><a href="contact.html" class="nav-link hover:text-white transition-colors duration-200">Contact</a></li>
+      </ul>
+      <div class="hidden md:flex flex-col items-end gap-2">
+        <a href="index.html#contact"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red text-white text-sm font-heading font-semibold rounded tracking-wide transition-opacity duration-200 hover:opacity-90"
+           style="box-shadow:0 4px 20px rgba(232,37,44,0.35);">
+          Book a Session
+        </a>
+        <div class="flex items-center gap-3">
+          <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+          </a>
+          <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Open menu">
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-6 font-heading text-sm font-medium space-y-4 text-white/80 border-t border-white/10 pt-4">
+      <a href="services.html"      class="block hover:text-white transition-colors">Services</a>
+      <a href="about.html"         class="block hover:text-white transition-colors">About</a>
+      <a href="studio.html"        class="block hover:text-white transition-colors">Studio</a>
+      <a href="music.html"         class="block hover:text-white transition-colors">Music</a>
+      <a href="films.html"         class="block hover:text-white transition-colors">AZ Films</a>
+      <a href="courses.html"       class="block text-white">Courses</a>
+      <a href="consultation.html"  class="block hover:text-white transition-colors">Consultation</a>
+      <a href="contact.html" class="block hover:text-white transition-colors">Contact</a>
+      <a href="index.html#contact" class="inline-block mt-2 px-5 py-2.5 bg-brand-red text-white rounded text-sm font-semibold tracking-wide">Book a Session</a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section class="relative pt-40 pb-24 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:-5%;left:50%;transform:translateX(-50%);width:70%;height:70%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.07) 0%,transparent 65%);"></div>
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <div class="ha1 flex items-center justify-center gap-3 mb-6">
+        <div class="waveform-line w-8"></div>
+        <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Private One-on-One</span>
+        <div class="waveform-line w-8"></div>
+      </div>
+
+      <h1 class="ha2 font-display leading-none mb-10" style="font-size:clamp(52px,9vw,104px);letter-spacing:-0.02em;">
+        ENGINEERING<br/><span class="text-brand-red">COURSES</span>
+      </h1>
+
+      <div class="ha3 space-y-5 text-white/55 font-body text-base" style="line-height:1.85;max-width:640px;margin:0 auto;">
+        <p>AZ Music Studios offers private, one-on-one courses for anyone who would like to learn everything about engineering. Whether you're just a beginner wanting to start with the basics, or someone who already has some knowledge and wants to push further — this is perfect for all.</p>
+        <p>School for engineering can get <strong class="text-white/80 font-medium">very expensive</strong>, and a lot of the time the courses just aren't that interesting. With AZ's classes, we focus on the stuff that actually matters and cut out all the filler.</p>
+        <p>If you're just starting out, we'll build from the ground up — covering the basics of Logic and Ableton, simple recording and mixing techniques, and working our way up. If you're already comfortable with the basics, we'll jump straight into advanced mixing and mastering. Classes move at a pace that works for <em class="text-white/70">you</em>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WHAT YOU WILL LEARN
+  ============================================================ -->
+  <section class="relative overflow-hidden" style="border-top:1px solid rgba(255,255,255,0.06);">
+    <!-- Background image -->
+    <div class="absolute inset-0">
+      <img src="Images/Wide.jpg" alt="" class="w-full h-full object-cover object-center" style="filter:brightness(0.18) saturate(0.6);" />
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(23,24,42,0.7) 0%,rgba(23,24,42,0.55) 50%,rgba(23,24,42,0.85) 100%);"></div>
+    </div>
+
+    <div class="relative z-10 py-24 px-6">
+      <div class="max-w-3xl mx-auto">
+        <div class="reveal text-center mb-14">
+          <div class="flex items-center justify-center gap-3 mb-4">
+            <div class="waveform-line w-8"></div>
+            <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Curriculum</span>
+            <div class="waveform-line w-8"></div>
+          </div>
+          <h2 class="font-display text-4xl md:text-6xl leading-none" style="letter-spacing:-0.02em;">
+            WHAT YOU<br/><span class="text-brand-red">WILL LEARN</span>
+          </h2>
+        </div>
+
+        <div class="space-y-0 max-w-xl mx-auto">
+          <div class="reveal delay-1 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">How to use <strong class="text-white font-medium">Logic and Ableton</strong> — the industry standard DAWs for recording, mixing, and mastering.</p>
+          </div>
+          <div class="reveal delay-1 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">Proper recording techniques.</p>
+          </div>
+          <div class="reveal delay-2 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">What microphones and types of gear are best for your home studio.</p>
+          </div>
+          <div class="reveal delay-2 learn-item">
+            <span class="learn-dot"></span>
+            <div>
+              <p class="font-body text-white/70 text-base" style="line-height:1.75;">How to use different plugins to improve the quality of your music:</p>
+              <ul class="sub-list mt-2">
+                <li>EQing</li>
+                <li>Compression</li>
+                <li>De-essing</li>
+                <li>Saturation</li>
+                <li>Reverb &amp; Delay</li>
+                <li>Pitch correction / tuning</li>
+                <li>And much more…</li>
+              </ul>
+            </div>
+          </div>
+          <div class="reveal delay-3 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">Mixing techniques that will make your music sound professional.</p>
+          </div>
+          <div class="reveal delay-3 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">Top-tier mastering techniques.</p>
+          </div>
+          <div class="reveal delay-4 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">Professional advice on how to get your engineering career started — finding clients, setting up your studio, building your brand.</p>
+          </div>
+          <div class="reveal delay-4 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">Live in-person mixing tutorials.</p>
+          </div>
+          <div class="reveal delay-4 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">Beat-making and music production techniques.</p>
+          </div>
+          <div class="reveal delay-4 learn-item">
+            <span class="learn-dot"></span>
+            <p class="font-body text-white/70 text-base" style="line-height:1.75;">And much more…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       COURSE OPTIONS & PRICING
+  ============================================================ -->
+  <section id="pricing" class="py-28 overflow-hidden" style="border-top:1px solid rgba(255,255,255,0.06);">
+    <div class="absolute pointer-events-none" aria-hidden="true" style="top:60%;left:50%;transform:translate(-50%,-50%);width:80%;height:80%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.05) 0%,transparent 65%);position:absolute;"></div>
+
+    <div class="max-w-5xl mx-auto px-6">
+
+      <!-- Section header -->
+      <div class="reveal text-center mb-6">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Pricing</span>
+          <div class="waveform-line w-8"></div>
+        </div>
+        <h2 class="font-display text-4xl md:text-6xl leading-none mb-6" style="letter-spacing:-0.02em;">
+          COURSE OPTIONS<br/><span class="text-brand-red">&amp; PRICING</span>
+        </h2>
+        <p class="font-body text-white/50 text-base max-w-lg mx-auto mb-2" style="line-height:1.8;">
+          All classes are one-on-one. Any additional people brought will also be charged the same rate — all rates are on a <strong class="text-white/70">per person</strong> basis.
+        </p>
+        <p class="font-body text-white/40 text-sm mb-8" style="line-height:1.7;">
+          Please email or call Anthony Zappavigna directly to discuss any questions prior to purchasing.
+        </p>
+        <a href="index.html#contact"
+           class="inline-flex items-center gap-2 px-8 py-3 border border-white/25 text-white font-heading font-semibold text-sm tracking-wider rounded hover:border-brand-red hover:text-brand-red transition-colors duration-200">
+          Contact
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <!-- Cards -->
+      <div class="grid md:grid-cols-2 gap-8 mt-16">
+
+        <!-- ---- CARD 1: The Foundation Course ---- -->
+        <div class="reveal delay-1 course-card">
+          <!-- Photo -->
+          <div style="height:200px;overflow:hidden;position:relative;">
+            <img src="Images/Keyboard 1.jpg" alt="Foundation Course" style="width:100%;height:100%;object-fit:cover;object-position:center;" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(23,24,42,0.7) 0%,transparent 60%);"></div>
+          </div>
+
+          <!-- Sale badge -->
+          <div class="sale-badge">
+            <span>🔥 ON SALE! $200 OFF!</span>
+            <span style="font-weight:400;opacity:0.75;font-size:10px;">REGULAR PRICE: $1,199</span>
+          </div>
+
+          <!-- Card body -->
+          <div class="p-7">
+            <p class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-1">Option 01</p>
+            <h3 class="font-display text-2xl leading-tight mb-4" style="letter-spacing:-0.01em;">The Foundation<br/>Course</h3>
+
+            <!-- Price -->
+            <div class="flex items-start gap-1 mb-5">
+              <span class="font-heading text-xl font-semibold text-white/50 mt-1">$</span>
+              <span class="font-display text-6xl text-white leading-none" style="letter-spacing:-0.02em;">999</span>
+            </div>
+
+            <p class="font-body text-white/55 text-sm mb-6" style="line-height:1.75;">
+              Whether you're just starting out or already have a bit of knowledge and want to expand on it — this course is great for all skill levels.
+            </p>
+
+            <a href="index.html#contact" class="book-btn mb-7">Book Now</a>
+
+            <!-- Features -->
+            <div class="mt-6 space-y-0">
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>4 Classes total</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Each class is 2 hours long</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>1 class / week for one month (or 2/week for two weeks)</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Can be done in person or via Zoom</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Expand your engineering knowledge</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Learn mixing, mastering &amp; recording techniques</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Learn how to use Logic &amp; Ableton</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Learn about different plugins</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Understand audio gear, microphones, interfaces, etc.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- CARD 2: The Full Immersion Course ---- -->
+        <div class="reveal delay-2 course-card" style="border-color:rgba(232,37,44,0.3);">
+          <!-- Photo -->
+          <div style="height:200px;overflow:hidden;position:relative;">
+            <img src="Images/Neve.jpg" alt="Full Immersion Course" style="width:100%;height:100%;object-fit:cover;object-position:center;" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(23,24,42,0.7) 0%,transparent 60%);"></div>
+          </div>
+
+          <!-- Sale badge -->
+          <div class="sale-badge" style="background:rgba(232,37,44,0.85);">
+            <span>🔥 ON SALE! $200 OFF!</span>
+            <span style="font-weight:400;opacity:0.75;font-size:10px;">REGULAR PRICE: $2,199</span>
+          </div>
+
+          <!-- Card body -->
+          <div class="p-7">
+            <p class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red mb-1">Option 02 — Most Popular</p>
+            <h3 class="font-display text-2xl leading-tight mb-4" style="letter-spacing:-0.01em;">The Full Immersion<br/>Course</h3>
+
+            <!-- Price -->
+            <div class="flex items-start gap-1 mb-5">
+              <span class="font-heading text-xl font-semibold text-white/50 mt-1">$</span>
+              <span class="font-display text-6xl text-white leading-none" style="letter-spacing:-0.02em;">1,999</span>
+            </div>
+
+            <p class="font-body text-white/55 text-sm mb-6" style="line-height:1.75;">
+              This course is geared towards individuals who want a deeper, more immersive learning experience. Both courses cover the same topics — you simply get more time and depth with this option.
+            </p>
+
+            <a href="index.html#contact" class="book-btn mb-7" style="background:#E8252C;border-color:#E8252C;">Book Now</a>
+
+            <!-- Features -->
+            <div class="mt-6 space-y-0">
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>8 Classes total</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Each class is 2 hours long</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>1 class / week for two months (or 2/week for one month)</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Can be done in person or via Zoom</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Expand your engineering knowledge</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Learn mixing, mastering &amp; recording techniques</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Learn how to use Logic &amp; Ableton</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Learn about different plugins</span>
+              </div>
+              <div class="feat-item">
+                <div class="feat-circle"><svg width="8" height="8" viewBox="0 0 10 10"><circle cx="5" cy="5" r="3" fill="#E8252C"/></svg></div>
+                <span>Understand audio gear, microphones, interfaces, etc.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.2);">
+    <div style="border-bottom:1px solid rgba(255,255,255,0.06);" class="py-12">
+      <div class="max-w-xl mx-auto px-6 text-center">
+        <p class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red mb-2">Stay in the loop</p>
+        <h3 class="font-display text-2xl mb-2" style="letter-spacing:-0.01em;">JOIN THE MAILING LIST</h3>
+        <p class="font-body text-white/40 text-sm mb-6" style="line-height:1.7;">New releases, studio news, and exclusive content — straight to your inbox.</p>
+        <form id="mail-form" class="flex gap-2 max-w-sm mx-auto"
+              onsubmit="event.preventDefault();document.getElementById('subscribe-msg').style.display='block';this.reset();">
+          <input type="email" placeholder="your@email.com" required
+            class="flex-1 px-4 py-3 rounded font-body text-sm text-white placeholder-white/30 focus:outline-none"
+            style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:border-color 0.2s ease;"
+            onfocus="this.style.borderColor='#E8252C'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" />
+          <button type="submit"
+            class="px-5 py-3 bg-brand-red text-white font-heading font-semibold text-sm rounded hover:opacity-90"
+            style="transition:opacity 0.2s ease;box-shadow:0 4px 20px rgba(232,37,44,0.3);flex-shrink:0;">
+            Subscribe
+          </button>
+        </form>
+        <p id="subscribe-msg" class="font-body text-xs mt-3 text-brand-red" style="display:none;">You're on the list!</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="font-body text-white/30 text-sm text-center">© 2026 AZ Music Studios. All rights reserved. Montreal, QC.</p>
+      <div class="flex items-center gap-5">
+        <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+        </a>
+        <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
+  <script>
+    (function() {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.06 });
+      document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — AZ Music Studios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&family=Karla:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { dark:'#17182A', mid:'#70829B', red:'#E8252C' } },
+          fontFamily: {
+            display: ['Anton','sans-serif'],
+            heading: ['Poppins','sans-serif'],
+            body:    ['Karla','sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:#17182A; }
+    ::-webkit-scrollbar-thumb { background:#E8252C; border-radius:3px; }
+    html { scroll-behavior:smooth; }
+
+    .nav-link { position:relative; }
+    .nav-link::after {
+      content:''; position:absolute; bottom:-2px; left:0;
+      width:0; height:2px; background:#E8252C;
+      transition:width 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .nav-link:hover::after { width:100%; }
+    .social-icon { transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease; }
+    .social-icon:hover { transform:scale(1.3); }
+    .waveform-line {
+      background:linear-gradient(90deg,transparent 0%,#E8252C 30%,#E8252C 70%,transparent 100%);
+      height:2px;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity:0; transform:translateY(24px);
+      transition:opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .delay-1 { transition-delay:0.1s; }
+    .delay-2 { transition-delay:0.2s; }
+    .delay-3 { transition-delay:0.3s; }
+
+    /* Hero anim */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .ha1 { animation:fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.1s both; }
+    .ha2 { animation:fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.3s both; }
+    .ha3 { animation:fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.5s both; }
+
+    /* Contact info cards */
+    .info-card {
+      display:flex; align-items:flex-start; gap:14px;
+      padding:18px 20px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:12px;
+      transition:border-color 0.2s ease, background 0.2s ease;
+    }
+    .info-card:hover { border-color:rgba(232,37,44,0.3); background:rgba(232,37,44,0.04); }
+    .info-icon {
+      width:36px; height:36px; border-radius:8px;
+      background:rgba(232,37,44,0.12);
+      border:1px solid rgba(232,37,44,0.2);
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+
+    /* FAQ accordion */
+    .faq-item {
+      border-bottom:1px solid rgba(255,255,255,0.07);
+    }
+    .faq-item:first-child { border-top:1px solid rgba(255,255,255,0.07); }
+    .faq-btn {
+      width:100%; text-align:left; cursor:pointer;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px; padding:20px 0;
+      background:transparent; border:none; outline:none;
+    }
+    .faq-q {
+      font-family:'Poppins',sans-serif; font-size:13px;
+      font-weight:600; letter-spacing:0.06em;
+      text-transform:uppercase; color:rgba(255,255,255,0.8);
+      line-height:1.5;
+    }
+    .faq-icon {
+      width:24px; height:24px; border-radius:50%;
+      border:1px solid rgba(232,37,44,0.4);
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; color:#E8252C;
+      transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .faq-item.open .faq-icon { transform:rotate(45deg); }
+    .faq-a {
+      overflow:hidden; max-height:0;
+      transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.3s ease;
+      padding-bottom:0;
+    }
+    .faq-item.open .faq-a { max-height:400px; padding-bottom:20px; }
+    .faq-a p {
+      font-family:'Karla',sans-serif; font-size:15px;
+      color:rgba(255,255,255,0.5); line-height:1.8;
+    }
+
+    /* Form inputs */
+    .form-input {
+      width:100%; padding:14px 16px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:8px;
+      font-family:'Karla',sans-serif; font-size:14px;
+      color:white; outline:none;
+      transition:border-color 0.2s ease, background 0.2s ease;
+    }
+    .form-input::placeholder { color:rgba(255,255,255,0.25); }
+    .form-input:focus {
+      border-color:#E8252C;
+      background:rgba(232,37,44,0.04);
+    }
+
+    /* Submit button */
+    .submit-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:14px 36px;
+      background:#E8252C; color:white;
+      font-family:'Poppins',sans-serif; font-weight:600;
+      font-size:13px; letter-spacing:0.1em; text-transform:uppercase;
+      border:none; border-radius:8px; cursor:pointer;
+      transition:opacity 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow:0 6px 28px rgba(232,37,44,0.4);
+    }
+    .submit-btn:hover { opacity:0.9; transform:translateY(-2px); }
+    .submit-btn:active { transform:translateY(0); }
+  </style>
+</head>
+<body class="bg-brand-dark font-body text-white overflow-x-hidden">
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <header id="top" class="fixed top-0 left-0 right-0 z-50" style="background:rgba(23,24,42,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(112,130,155,0.12);">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-28">
+      <a href="index.html" class="flex-shrink-0 block overflow-hidden" style="height:76px;width:240px;">
+        <img src="Brand_assets/Logo-White.png" alt="AZ Music Studios" style="height:360px;width:auto;max-width:none;margin-top:-140px;margin-left:-109px;" />
+      </a>
+      <ul class="hidden md:flex items-center gap-7 font-heading text-sm font-medium tracking-wide text-white/70">
+        <li><a href="services.html"      class="nav-link hover:text-white transition-colors duration-200">Services</a></li>
+        <li><a href="about.html"         class="nav-link hover:text-white transition-colors duration-200">About</a></li>
+        <li><a href="studio.html"        class="nav-link hover:text-white transition-colors duration-200">Studio</a></li>
+        <li><a href="music.html"         class="nav-link hover:text-white transition-colors duration-200">Music</a></li>
+        <li><a href="films.html" class="nav-link hover:text-white transition-colors duration-200">AZ Films</a></li>
+        <li><a href="courses.html"       class="nav-link hover:text-white transition-colors duration-200">Courses</a></li>
+        <li><a href="consultation.html"  class="nav-link hover:text-white transition-colors duration-200">Consultation</a></li>
+        <li><a href="contact.html"       class="nav-link text-white transition-colors duration-200">Contact</a></li>
+      </ul>
+      <div class="hidden md:flex flex-col items-end gap-2">
+        <a href="#form"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red text-white text-sm font-heading font-semibold rounded tracking-wide transition-opacity duration-200 hover:opacity-90"
+           style="box-shadow:0 4px 20px rgba(232,37,44,0.35);">
+          Send a Message
+        </a>
+        <div class="flex items-center gap-3">
+          <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+          </a>
+          <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Open menu">
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-6 font-heading text-sm font-medium space-y-4 text-white/80 border-t border-white/10 pt-4">
+      <a href="services.html"      class="block hover:text-white transition-colors">Services</a>
+      <a href="about.html"         class="block hover:text-white transition-colors">About</a>
+      <a href="studio.html"        class="block hover:text-white transition-colors">Studio</a>
+      <a href="music.html"         class="block hover:text-white transition-colors">Music</a>
+      <a href="films.html"         class="block hover:text-white transition-colors">AZ Films</a>
+      <a href="courses.html"       class="block hover:text-white transition-colors">Courses</a>
+      <a href="consultation.html"  class="block hover:text-white transition-colors">Consultation</a>
+      <a href="contact.html"       class="block text-white">Contact</a>
+      <a href="#form" class="inline-block mt-2 px-5 py-2.5 bg-brand-red text-white rounded text-sm font-semibold tracking-wide">Send a Message</a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO — CONTACT INFO
+  ============================================================ -->
+  <section class="relative pt-44 pb-24 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:70%;height:70%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.07) 0%,transparent 65%);"></div>
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-14">
+        <div class="ha1 flex items-center justify-center gap-3 mb-6">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Get in Touch</span>
+          <div class="waveform-line w-8"></div>
+        </div>
+        <h1 class="ha2 font-display leading-none mb-6" style="font-size:clamp(64px,11vw,120px);letter-spacing:-0.02em;">CONTACT</h1>
+        <p class="ha3 font-body text-white/50 text-base max-w-lg mx-auto" style="line-height:1.8;">
+          To book a recording session or inquire about mixing and mastering, reach out by email or social media. We'll get back to you as soon as possible.
+        </p>
+      </div>
+
+      <!-- Info cards -->
+      <div class="ha3 grid sm:grid-cols-3 gap-4 mb-12 max-w-2xl mx-auto w-full">
+        <div class="info-card">
+          <div class="info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <p class="font-heading text-xs font-semibold tracking-wider uppercase text-white/30 mb-0.5">Email</p>
+            <a href="mailto:azmusicstudios1@gmail.com" class="font-body text-sm text-white/70 hover:text-brand-red transition-colors duration-200 break-all">azmusicstudios1@gmail.com</a>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <p class="font-heading text-xs font-semibold tracking-wider uppercase text-white/30 mb-0.5">Location</p>
+            <p class="font-body text-sm text-white/70">Montreal, Quebec, Canada</p>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <p class="font-heading text-xs font-semibold tracking-wider uppercase text-white/30 mb-0.5">Phone</p>
+            <a href="tel:4383982439" class="font-body text-sm text-white/70 hover:text-brand-red transition-colors duration-200">(438) 398-2439</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social icons row -->
+      <div class="ha3 flex items-center justify-center gap-5">
+        <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+        </a>
+        <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FAQ
+  ============================================================ -->
+  <section class="py-24 overflow-hidden" style="border-top:1px solid rgba(255,255,255,0.06);">
+    <div class="max-w-3xl mx-auto px-6">
+
+      <div class="reveal text-center mb-14">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">FAQ</span>
+          <div class="waveform-line w-8"></div>
+        </div>
+        <h2 class="font-display text-4xl md:text-5xl leading-none" style="letter-spacing:-0.02em;">
+          FREQUENTLY ASKED<br/><span class="text-brand-red">QUESTIONS</span>
+        </h2>
+      </div>
+
+      <div class="reveal delay-1" id="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-q">How long does a mix usually take?</span>
+            <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a"><p>Depends on how busy Anthony is at any given time, but on average usually 7 days. If more or less we'll let you know.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-q">Is my mix included in the recording price?</span>
+            <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a"><p>No. At the end of your recording session you will receive a rough MP3 version of your song. Professional mixing and mastering is separate — rates can be found on the <a href="services.html" style="color:#E8252C;text-decoration:underline;">Services</a> page.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-q">How should I send my files for mixing and mastering?</span>
+            <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a"><p>All files should be sent in WAV format. Vocals should have NO effects on them. Beat files can be left exactly how you have them with effects. If you recorded in Logic or Ableton, you can also just send the entire session file.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-q">I'm in a rush — is it possible to get a faster return time?</span>
+            <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a"><p>Yes, it is possible, but it comes with an additional fee. Whatever mixing/mastering rate you chose, there will be an additional $60 fee. However, you get bumped to the front of the list and will receive the song back within roughly 48 hours.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-q">Can you mix the song with me being there?</span>
+            <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a"><p>Generally, Anthony is very busy and does the mixing and mastering process on his own. Having the client present usually slows down the process. However, Anthony will always get an understanding of the direction the artist is trying to go with the song before diving into it. He is also always open to making revisions once the mix has been sent.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-q">Will the quality of the mix still sound professional if I record it on my own?</span>
+            <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a"><p>This gets a yes and no. A lot of people prefer to record on their own using their home setup. If your home setup quality is good, it will translate to a great mix. However, if the acoustics of your room are poor or your microphone isn't great, the mix might not reach its full 100%. It will still be cleaned up to its full potential, but might not sound the same as something recorded at AZ Music Studios.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-q">How much notice do I have to give to book a recording session?</span>
+            <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a"><p>As much notice as possible please — a few days in advance at least. Last minute sessions will very rarely work in your favour due to our busy schedule. Please reach out by email or social media to check availability and set up a session.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)">
+            <span class="faq-q">Can you make my mix sound like _______ song?</span>
+            <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          </button>
+          <div class="faq-a"><p>Yes. If there is a certain style or vibe you have in mind for your song, just send a reference track. Anthony can replicate any effect, style, or vibe if he hears an example of it.</p></div>
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT FORM
+  ============================================================ -->
+  <section id="form" class="py-28 overflow-hidden" style="border-top:1px solid rgba(255,255,255,0.06);">
+    <div class="absolute pointer-events-none" aria-hidden="true" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;height:80%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.06) 0%,transparent 65%);"></div>
+
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+        <!-- Left: heading + details -->
+        <div>
+          <div class="reveal flex items-center gap-3 mb-5">
+            <div class="waveform-line w-8"></div>
+            <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Message Us</span>
+          </div>
+          <h2 class="reveal font-display text-4xl md:text-5xl leading-none mb-6" style="letter-spacing:-0.02em;">
+            SEND A<br/><span class="text-brand-red">MESSAGE</span>
+          </h2>
+          <p class="reveal font-body text-white/50 text-base mb-10" style="line-height:1.8;max-width:380px;">
+            Fill out the form and we'll get back to you as soon as possible. For faster responses, feel free to reach out directly on social media.
+          </p>
+
+          <div class="reveal space-y-4">
+            <div class="flex items-center gap-3 font-body text-sm text-white/50">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="mailto:azmusicstudios1@gmail.com" class="hover:text-brand-red transition-colors duration-200">azmusicstudios1@gmail.com</a>
+            </div>
+            <div class="flex items-center gap-3 font-body text-sm text-white/50">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <a href="tel:4383982439" class="hover:text-brand-red transition-colors duration-200">(438) 398-2439</a>
+            </div>
+            <div class="flex items-center gap-3 font-body text-sm text-white/50">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Montreal, Quebec, Canada</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: form -->
+        <div class="reveal delay-2">
+          <form id="contact-form" onsubmit="handleContactSubmit(event)"
+                class="space-y-4"
+                style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:36px;">
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="font-heading text-xs font-semibold tracking-wider uppercase text-white/30 mb-2 block">Name</label>
+                <input type="text" name="name" placeholder="Your name" required class="form-input" />
+              </div>
+              <div>
+                <label class="font-heading text-xs font-semibold tracking-wider uppercase text-white/30 mb-2 block">Email</label>
+                <input type="email" name="email" placeholder="your@email.com" required class="form-input" />
+              </div>
+            </div>
+
+            <div>
+              <label class="font-heading text-xs font-semibold tracking-wider uppercase text-white/30 mb-2 block">Subject</label>
+              <input type="text" name="subject" placeholder="Recording session, mixing inquiry…" class="form-input" />
+            </div>
+
+            <div>
+              <label class="font-heading text-xs font-semibold tracking-wider uppercase text-white/30 mb-2 block">Message</label>
+              <textarea name="message" placeholder="Tell us about your project…" rows="5" required
+                        class="form-input resize-none" style="resize:none;"></textarea>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between gap-4">
+              <button type="submit" class="submit-btn">
+                Send Message
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <p id="form-msg" class="font-body text-brand-red text-sm" style="display:none;">Message sent!</p>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.2);">
+    <div style="border-bottom:1px solid rgba(255,255,255,0.06);" class="py-12">
+      <div class="max-w-xl mx-auto px-6 text-center">
+        <p class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red mb-2">Stay in the loop</p>
+        <h3 class="font-display text-2xl mb-2" style="letter-spacing:-0.01em;">JOIN THE MAILING LIST</h3>
+        <p class="font-body text-white/40 text-sm mb-6" style="line-height:1.7;">New releases, studio news, and exclusive content — straight to your inbox.</p>
+        <form id="mail-form" class="flex gap-2 max-w-sm mx-auto"
+              onsubmit="event.preventDefault();document.getElementById('subscribe-msg').style.display='block';this.reset();">
+          <input type="email" placeholder="your@email.com" required
+            class="flex-1 px-4 py-3 rounded font-body text-sm text-white placeholder-white/30 focus:outline-none"
+            style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:border-color 0.2s ease;"
+            onfocus="this.style.borderColor='#E8252C'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" />
+          <button type="submit"
+            class="px-5 py-3 bg-brand-red text-white font-heading font-semibold text-sm rounded hover:opacity-90"
+            style="transition:opacity 0.2s ease;box-shadow:0 4px 20px rgba(232,37,44,0.3);flex-shrink:0;">
+            Subscribe
+          </button>
+        </form>
+        <p id="subscribe-msg" class="font-body text-xs mt-3 text-brand-red" style="display:none;">You're on the list!</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="font-body text-white/30 text-sm text-center">© 2026 AZ Music Studios. All rights reserved. Montreal, QC.</p>
+      <div class="flex items-center gap-5">
+        <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+        </a>
+        <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+
+    function toggleFaq(btn) {
+      var item = btn.parentElement;
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+      if (!isOpen) item.classList.add('open');
+    }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      document.getElementById('form-msg').style.display = 'block';
+      document.getElementById('contact-form').reset();
+    }
+
+    (function() {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.06 });
+      document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>

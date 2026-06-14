@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consultation — AZ Music Studios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&family=Karla:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { dark:'#17182A', mid:'#70829B', red:'#E8252C' } },
+          fontFamily: {
+            display: ['Anton','sans-serif'],
+            heading: ['Poppins','sans-serif'],
+            body:    ['Karla','sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:#17182A; }
+    ::-webkit-scrollbar-thumb { background:#E8252C; border-radius:3px; }
+    html { scroll-behavior:smooth; }
+
+    .nav-link { position:relative; }
+    .nav-link::after {
+      content:''; position:absolute; bottom:-2px; left:0;
+      width:0; height:2px; background:#E8252C;
+      transition:width 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .nav-link:hover::after { width:100%; }
+    .social-icon { transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease; }
+    .social-icon:hover { transform:scale(1.3); }
+    .waveform-line {
+      background:linear-gradient(90deg,transparent 0%,#E8252C 30%,#E8252C 70%,transparent 100%);
+      height:2px;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity:0; transform:translateY(28px);
+      transition:opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-left {
+      opacity:0; transform:translateX(-32px);
+      transition:opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal-left.visible { opacity:1; transform:translateX(0); }
+    .reveal-right {
+      opacity:0; transform:translateX(32px);
+      transition:opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal-right.visible { opacity:1; transform:translateX(0); }
+    .delay-1 { transition-delay:0.1s; }
+    .delay-2 { transition-delay:0.2s; }
+    .delay-3 { transition-delay:0.3s; }
+    .delay-4 { transition-delay:0.4s; }
+    .delay-5 { transition-delay:0.5s; }
+
+    /* Hero */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .hero-anim-1 { animation: fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.1s both; }
+    .hero-anim-2 { animation: fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.3s both; }
+    .hero-anim-3 { animation: fadeUp 0.9s cubic-bezier(0.4,0,0.2,1) 0.5s both; }
+
+    /* Reason bullets */
+    .reason-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .reason-item:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+    .reason-num {
+      font-family: 'Anton', sans-serif;
+      font-size: 13px; color: #E8252C;
+      letter-spacing: 0.08em;
+      flex-shrink: 0; margin-top: 2px;
+      min-width: 24px;
+    }
+
+    /* Pricing card */
+    .price-card {
+      background: linear-gradient(135deg, rgba(232,37,44,0.1) 0%, rgba(232,37,44,0.04) 100%);
+      border: 1px solid rgba(232,37,44,0.35);
+      border-radius: 20px;
+      padding: 48px;
+      position: relative;
+      box-shadow: 0 8px 60px rgba(232,37,44,0.15), 0 2px 20px rgba(0,0,0,0.4);
+    }
+
+    /* Feature check row */
+    .feat-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .feat-row:last-child { border-bottom: none; }
+    .feat-check {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(232,37,44,0.18);
+      border: 1px solid rgba(232,37,44,0.4);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Photo hover */
+    .photo-wrap {
+      overflow: hidden; border-radius: 16px;
+    }
+    .photo-wrap img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center;
+      transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+      display: block;
+    }
+    .photo-wrap:hover img { transform: scale(1.03); }
+  </style>
+</head>
+<body class="bg-brand-dark font-body text-white overflow-x-hidden">
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <header id="top" class="fixed top-0 left-0 right-0 z-50" style="background:rgba(23,24,42,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(112,130,155,0.12);">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-28">
+      <a href="index.html" class="flex-shrink-0 block overflow-hidden" style="height:76px;width:240px;">
+        <img src="Brand_assets/Logo-White.png" alt="AZ Music Studios" style="height:360px;width:auto;max-width:none;margin-top:-140px;margin-left:-109px;" />
+      </a>
+      <ul class="hidden md:flex items-center gap-8 font-heading text-sm font-medium tracking-wide text-white/70">
+        <li><a href="services.html"      class="nav-link hover:text-white transition-colors duration-200">Services</a></li>
+        <li><a href="about.html"         class="nav-link hover:text-white transition-colors duration-200">About</a></li>
+        <li><a href="studio.html"        class="nav-link hover:text-white transition-colors duration-200">Studio</a></li>
+        <li><a href="music.html"         class="nav-link hover:text-white transition-colors duration-200">Music</a></li>
+        <li><a href="films.html" class="nav-link hover:text-white transition-colors duration-200">AZ Films</a></li>
+        <li><a href="courses.html"        class="nav-link hover:text-white transition-colors duration-200">Courses</a></li>
+        <li><a href="consultation.html"  class="nav-link text-white transition-colors duration-200">Consultation</a></li>
+        <li><a href="contact.html" class="nav-link hover:text-white transition-colors duration-200">Contact</a></li>
+      </ul>
+      <div class="hidden md:flex flex-col items-end gap-2">
+        <a href="#book"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red text-white text-sm font-heading font-semibold rounded tracking-wide transition-opacity duration-200 hover:opacity-90"
+           style="box-shadow:0 4px 20px rgba(232,37,44,0.35);">
+          Book a Call
+        </a>
+        <div class="flex items-center gap-3">
+          <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+          </a>
+          <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Open menu">
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-6 font-heading text-sm font-medium space-y-4 text-white/80 border-t border-white/10 pt-4">
+      <a href="services.html"      class="block hover:text-white transition-colors">Services</a>
+      <a href="about.html"         class="block hover:text-white transition-colors">About</a>
+      <a href="studio.html"        class="block hover:text-white transition-colors">Studio</a>
+      <a href="music.html"         class="block hover:text-white transition-colors">Music</a>
+      <a href="courses.html"        class="block hover:text-white transition-colors">Courses</a>
+      <a href="consultation.html"  class="block text-white">Consultation</a>
+      <a href="contact.html" class="block hover:text-white transition-colors">Contact</a>
+      <a href="#book" class="inline-block mt-2 px-5 py-2.5 bg-brand-red text-white rounded text-sm font-semibold tracking-wide">Book a Call</a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO — SPLIT (text left / photo right)
+  ============================================================ -->
+  <section class="relative min-h-screen flex items-center overflow-hidden pt-28">
+    <!-- Background glow -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:-5%;left:-10%;width:60%;height:70%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.06) 0%,transparent 65%);"></div>
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+      <div class="grid lg:grid-cols-2 gap-16 items-center py-20 lg:py-28">
+
+        <!-- Left: Text -->
+        <div>
+          <div class="hero-anim-1 flex items-center gap-3 mb-6">
+            <div class="waveform-line w-8"></div>
+            <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Private Consultation</span>
+          </div>
+
+          <h1 class="hero-anim-2 font-display leading-none mb-8" style="font-size:clamp(52px,8vw,96px);letter-spacing:-0.02em;">
+            GOT<br/>QUESTIONS?<br/><span class="text-brand-red">THIS IS<br/>FOR YOU.</span>
+          </h1>
+
+          <p class="hero-anim-3 font-body text-white/60 text-lg mb-10" style="line-height:1.8;max-width:480px;">
+            With over a decade of full-time experience as a recording engineer and producer, Anthony Zappavigna is now offering private one-on-one consultation calls — for anyone who needs real answers, honest feedback, or a clear direction forward.
+          </p>
+
+          <div class="hero-anim-3 flex flex-wrap gap-4">
+            <a href="#book"
+               class="inline-flex items-center gap-2 px-8 py-4 bg-brand-red text-white font-heading font-semibold text-sm tracking-wider rounded transition-opacity duration-200 hover:opacity-90"
+               style="box-shadow:0 8px 32px rgba(232,37,44,0.4);">
+              Book a Call — $100
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="#reasons"
+               class="inline-flex items-center gap-2 px-8 py-4 text-white font-heading font-semibold text-sm tracking-wider rounded border border-white/20 hover:border-brand-red hover:text-brand-red transition-colors duration-200">
+              Learn More
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Photo -->
+        <div class="hero-anim-2 relative">
+          <!-- Me 2.jpg — portrait -->
+          <div class="photo-wrap" style="height:600px;">
+            <img src="Images/Me 2.jpg" alt="Anthony Zappavigna at the studio" />
+          </div>
+          <!-- Floating badge -->
+          <div class="absolute -bottom-5 -left-5 px-5 py-4 rounded-2xl font-heading font-semibold text-sm"
+               style="background:rgba(23,24,42,0.95);border:1px solid rgba(232,37,44,0.35);box-shadow:0 8px 40px rgba(0,0,0,0.5);">
+            <div class="font-display text-3xl text-brand-red" style="letter-spacing:-0.01em;">10+</div>
+            <div class="font-heading text-xs tracking-widest uppercase text-white/45 mt-0.5">Years in the industry</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       REASONS TO BOOK
+  ============================================================ -->
+  <section id="reasons" class="relative py-28 overflow-hidden" style="border-top:1px solid rgba(255,255,255,0.06);">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:-10%;right:-5%;width:45%;height:60%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.05) 0%,transparent 65%);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-20 items-start">
+
+        <!-- Left: Reasons list -->
+        <div>
+          <div class="reveal flex items-center gap-3 mb-6">
+            <div class="waveform-line w-8"></div>
+            <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Why Book?</span>
+          </div>
+          <h2 class="reveal font-display text-4xl md:text-5xl leading-none mb-12" style="letter-spacing:-0.02em;">
+            REASONS TO BOOK<br/><span class="text-brand-red">A CONSULTATION</span>
+          </h2>
+
+          <div>
+            <div class="reveal delay-1 reason-item">
+              <span class="reason-num">01</span>
+              <p class="font-body text-white/65 text-base" style="line-height:1.75;">
+                You have general questions about the music industry and want clear, direct answers from someone who's been doing this full-time.
+              </p>
+            </div>
+            <div class="reveal delay-2 reason-item">
+              <span class="reason-num">02</span>
+              <p class="font-body text-white/65 text-base" style="line-height:1.75;">
+                You want to understand the business side of audio engineering — how to price yourself, find clients, and build a sustainable career.
+              </p>
+            </div>
+            <div class="reveal delay-3 reason-item">
+              <span class="reason-num">03</span>
+              <p class="font-body text-white/65 text-base" style="line-height:1.75;">
+                You want a personal mix critiqued by Anthony — get honest, professional feedback on your work directly, not from a forum.
+              </p>
+            </div>
+            <div class="reveal delay-4 reason-item">
+              <span class="reason-num">04</span>
+              <p class="font-body text-white/65 text-base" style="line-height:1.75;">
+                You want proven strategies to attract more clients and grow your brand in a competitive market.
+              </p>
+            </div>
+            <div class="reveal delay-5 reason-item">
+              <span class="reason-num">05</span>
+              <p class="font-body text-white/65 text-base" style="line-height:1.75;">
+                You want tailored guidance on your engineering career — wherever you are right now, whether you're just starting out or trying to level up.
+              </p>
+            </div>
+          </div>
+
+          <p class="reveal font-body text-white/40 text-sm mt-8" style="line-height:1.7;">
+            These are just a few examples. Whatever you want to cover on the call is entirely up to you — the hour is yours.
+          </p>
+        </div>
+
+        <!-- Right: Me 3.jpg -->
+        <div class="reveal-right">
+          <div class="photo-wrap" style="height:580px;">
+            <img src="Images/Me 3.jpg" alt="Studio session with Anthony Zappavigna" style="object-position:top;" />
+          </div>
+          <p class="font-body text-white/30 text-xs mt-4 text-center tracking-wide">Anthony working with artists at AZ Music Studios</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRICING CARD
+  ============================================================ -->
+  <section id="book" class="relative py-28 overflow-hidden" style="border-top:1px solid rgba(255,255,255,0.06);">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;height:80%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.07) 0%,transparent 65%);"></div>
+    </div>
+
+    <div class="max-w-xl mx-auto px-6">
+
+      <div class="reveal text-center mb-12">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.22em] uppercase text-brand-red">Pricing</span>
+          <div class="waveform-line w-8"></div>
+        </div>
+        <h2 class="font-display text-4xl md:text-5xl leading-none" style="letter-spacing:-0.02em;">BOOK YOUR CALL</h2>
+      </div>
+
+      <div class="reveal price-card">
+        <!-- On sale badge -->
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+          <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-red text-white font-heading text-xs font-semibold tracking-wider uppercase"
+                style="box-shadow:0 4px 20px rgba(232,37,44,0.5);">
+            🔥 On Sale — Limited Time
+          </span>
+        </div>
+
+        <!-- Price -->
+        <div class="text-center pt-6 pb-8" style="border-bottom:1px solid rgba(232,37,44,0.18);">
+          <div class="flex items-start justify-center gap-1">
+            <span class="font-heading text-2xl font-semibold text-white/50 mt-3">$</span>
+            <span class="font-display text-8xl text-white leading-none" style="letter-spacing:-0.02em;">100</span>
+          </div>
+          <p class="font-body text-white/40 text-sm mt-2 tracking-wide">per session · on sale now</p>
+        </div>
+
+        <!-- Features -->
+        <div class="py-6 space-y-0">
+          <div class="feat-row">
+            <div class="feat-check">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="font-body text-white/70 text-base">60-minute private session</span>
+          </div>
+          <div class="feat-row">
+            <div class="feat-check">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="font-body text-white/70 text-base">Phone call or Zoom — your choice</span>
+          </div>
+          <div class="feat-row">
+            <div class="feat-check">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="font-body text-white/70 text-base">One-on-one with Anthony Zappavigna</span>
+          </div>
+          <div class="feat-row">
+            <div class="feat-check">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="font-body text-white/70 text-base">Cover any topic — fully your call</span>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <a href="index.html#contact"
+           class="flex items-center justify-center gap-2 w-full py-4 bg-brand-red text-white font-heading font-semibold text-sm tracking-wider rounded-xl transition-opacity duration-200 hover:opacity-90 mt-2"
+           style="box-shadow:0 6px 28px rgba(232,37,44,0.45);">
+          Book Your Session
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+
+        <p class="text-center font-body text-white/25 text-xs mt-4">Reach out via the contact form and mention "Consultation" to get started.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.2);">
+    <div style="border-bottom:1px solid rgba(255,255,255,0.06);" class="py-12">
+      <div class="max-w-xl mx-auto px-6 text-center">
+        <p class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red mb-2">Stay in the loop</p>
+        <h3 class="font-display text-2xl mb-2" style="letter-spacing:-0.01em;">JOIN THE MAILING LIST</h3>
+        <p class="font-body text-white/40 text-sm mb-6" style="line-height:1.7;">New releases, studio news, and exclusive content — straight to your inbox.</p>
+        <form id="mail-form" class="flex gap-2 max-w-sm mx-auto"
+              onsubmit="event.preventDefault();document.getElementById('subscribe-msg').style.display='block';this.reset();">
+          <input type="email" placeholder="your@email.com" required
+            class="flex-1 px-4 py-3 rounded font-body text-sm text-white placeholder-white/30 focus:outline-none"
+            style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:border-color 0.2s ease;"
+            onfocus="this.style.borderColor='#E8252C'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" />
+          <button type="submit"
+            class="px-5 py-3 bg-brand-red text-white font-heading font-semibold text-sm rounded hover:opacity-90"
+            style="transition:opacity 0.2s ease;box-shadow:0 4px 20px rgba(232,37,44,0.3);flex-shrink:0;">
+            Subscribe
+          </button>
+        </form>
+        <p id="subscribe-msg" class="font-body text-xs mt-3 text-brand-red" style="display:none;">You're on the list!</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="font-body text-white/30 text-sm text-center">© 2026 AZ Music Studios. All rights reserved. Montreal, QC.</p>
+      <div class="flex items-center gap-5">
+        <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+        </a>
+        <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
+  <script>
+    (function() {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) { obs.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>

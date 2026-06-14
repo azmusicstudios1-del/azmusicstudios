@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ Music Studios — Recording Studio in Montreal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&family=Karla:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#17182A',
+              mid:  '#70829B',
+              red:  '#E8252C',
+            }
+          },
+          fontFamily: {
+            display: ['Anton', 'sans-serif'],
+            heading: ['Poppins', 'sans-serif'],
+            body:    ['Karla', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Grain texture */
+    .grain::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #17182A; }
+    ::-webkit-scrollbar-thumb { background: #E8252C; border-radius: 3px; }
+
+    /* Nav link underline animation */
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: #E8252C;
+      transition: width 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Card hover lift */
+    .service-card {
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(232,37,44,0.18), 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    /* Waveform decorative line */
+    .waveform-line {
+      background: linear-gradient(90deg, transparent 0%, #E8252C 30%, #E8252C 70%, transparent 100%);
+      height: 2px;
+    }
+
+    /* Button press */
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-outline:active { transform: scale(0.97); }
+
+    /* Input focus ring */
+    .form-input:focus {
+      outline: none;
+      border-color: #E8252C;
+      box-shadow: 0 0 0 3px rgba(232,37,44,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    /* ---- Scroll reveal ---- */
+    .reveal, .reveal-left, .reveal-right {
+      opacity: 0;
+      transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal       { transform: translateY(36px); }
+    .reveal-left  { transform: translateX(-40px); }
+    .reveal-right { transform: translateX(40px); }
+    .reveal.visible, .reveal-left.visible, .reveal-right.visible {
+      opacity: 1; transform: translate(0);
+    }
+    .delay-1 { transition-delay: 0.10s; }
+    .delay-2 { transition-delay: 0.20s; }
+    .delay-3 { transition-delay: 0.30s; }
+    .delay-4 { transition-delay: 0.40s; }
+
+    /* ---- Hero load animations ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-1 { animation: fadeUp 0.8s cubic-bezier(0.4,0,0.2,1) 0.15s both; }
+    .hero-2 { animation: fadeUp 0.8s cubic-bezier(0.4,0,0.2,1) 0.35s both; }
+    .hero-3 { animation: fadeUp 0.8s cubic-bezier(0.4,0,0.2,1) 0.55s both; }
+    .hero-4 { animation: fadeUp 0.8s cubic-bezier(0.4,0,0.2,1) 0.75s both; }
+
+    /* ---- Scroll indicator ---- */
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      55%       { transform: translateX(-50%) translateY(8px); }
+    }
+    .scroll-indicator { animation: scrollBounce 2.2s ease-in-out infinite; }
+
+    /* ---- Studio panel hover ---- */
+    .studio-panel { transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease; }
+    .studio-panel:hover {
+      transform: scale(1.025);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(232,37,44,0.25) !important;
+    }
+    .studio-panel img { transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .studio-panel:hover img { transform: scale(1.07); }
+    .studio-label { transition: transform 0.3s ease; }
+    .studio-panel:hover .studio-label { transform: translateY(-4px); }
+
+    /* ---- Music card hover ---- */
+    .music-card {
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .music-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+      border-color: rgba(232,37,44,0.3) !important;
+    }
+
+    /* ---- Social icon pop ---- */
+    .social-icon { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important; }
+    .social-icon:hover { transform: scale(1.3) !important; }
+
+    /* ---- Stat item hover ---- */
+    .stat-item { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); cursor: default; }
+    .stat-item:hover { transform: translateY(-4px); }
+
+    /* ---- Restore service card hover after reveal (cascade fix) ---- */
+    .service-card.visible {
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(232,37,44,0.18), 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    @keyframes marquee-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes marquee-right {
+      0%   { transform: translateX(-50%); }
+      100% { transform: translateX(0); }
+    }
+    .animate-marquee-left  { animation: marquee-left  35s linear infinite; }
+    .animate-marquee-right { animation: marquee-right 40s linear infinite; }
+  </style>
+</head>
+<body class="bg-brand-dark font-body text-white overflow-x-hidden">
+
+  <!-- SVG noise filter definition -->
+  <svg class="absolute w-0 h-0" aria-hidden="true">
+    <defs>
+      <filter id="grain-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+        <feBlend in="SourceGraphic" mode="overlay" result="blend"/>
+        <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <header id="top" class="fixed top-0 left-0 right-0 z-50" style="background: rgba(23,24,42,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(112,130,155,0.12);">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-28">
+      <!-- Logo -->
+      <a href="#top" class="flex-shrink-0 block overflow-hidden" style="height: 76px; width: 240px;">
+        <img src="Brand_assets/Logo-White.png" alt="AZ Music Studios" style="height: 360px; width: auto; max-width: none; margin-top: -140px; margin-left: -109px;" />
+      </a>
+
+      <!-- Desktop nav links -->
+      <ul class="hidden md:flex items-center gap-8 font-heading text-sm font-medium tracking-wide text-white/70">
+        <li><a href="services.html" class="nav-link hover:text-white transition-colors duration-200">Services</a></li>
+        <li><a href="about.html"    class="nav-link hover:text-white transition-colors duration-200">About</a></li>
+        <li><a href="studio.html" class="nav-link hover:text-white transition-colors duration-200">Studio</a></li>
+        <li><a href="music.html" class="nav-link hover:text-white transition-colors duration-200">Music</a></li>
+        <li><a href="films.html" class="nav-link hover:text-white transition-colors duration-200">AZ Films</a></li>
+        <li><a href="courses.html"       class="nav-link hover:text-white transition-colors duration-200">Courses</a></li>
+        <li><a href="consultation.html" class="nav-link hover:text-white transition-colors duration-200">Consultation</a></li>
+        <li><a href="contact.html" class="nav-link hover:text-white transition-colors duration-200">Contact</a></li>
+      </ul>
+
+      <!-- CTA + Social -->
+      <div class="hidden md:flex flex-col items-end gap-2">
+        <a href="#contact"
+           class="btn-primary inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red text-white text-sm font-heading font-semibold rounded tracking-wide transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+           style="box-shadow: 0 4px 20px rgba(232,37,44,0.35);">
+          Book a Session
+        </a>
+        <div class="flex items-center gap-3">
+          <!-- Instagram -->
+          <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <!-- Facebook -->
+          <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <!-- TikTok -->
+          <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          </a>
+          <!-- YouTube -->
+          <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+          </a>
+          <!-- X / Twitter -->
+          <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-2 focus-visible:outline-none" aria-label="Open menu">
+        <span class="w-6 h-0.5 bg-white rounded transition-transform duration-200"></span>
+        <span class="w-6 h-0.5 bg-white rounded transition-opacity duration-200"></span>
+        <span class="w-6 h-0.5 bg-white rounded transition-transform duration-200"></span>
+      </button>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-6 font-heading text-sm font-medium space-y-4 text-white/80 border-t border-white/10 pt-4">
+      <a href="services.html" class="block hover:text-white transition-colors">Services</a>
+      <a href="about.html"    class="block hover:text-white transition-colors">About</a>
+      <a href="studio.html" class="block hover:text-white transition-colors">Studio</a>
+      <a href="courses.html"       class="block hover:text-white transition-colors">Courses</a>
+      <a href="consultation.html" class="block hover:text-white transition-colors">Consultation</a>
+      <a href="contact.html" class="block hover:text-white transition-colors">Contact</a>
+      <a href="#contact"  class="inline-block mt-2 px-5 py-2.5 bg-brand-red text-white rounded text-sm font-semibold tracking-wide">Book a Session</a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden grain" style="padding-top: 80px;">
+
+    <!-- Background photo -->
+    <div class="absolute inset-0" aria-hidden="true">
+      <img src="Images/Wide%202.jpg" alt="" class="w-full h-full object-cover" style="max-width: none;" />
+      <!-- Dark overlay for readability -->
+      <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(23,24,42,0.55) 0%, rgba(23,24,42,0.65) 60%, #17182A 100%);"></div>
+      <!-- Red tint layer -->
+      <div class="absolute inset-0" style="background: rgba(232,37,44,0.06); mix-blend-mode: multiply;"></div>
+    </div>
+
+    <!-- Vertical accent line -->
+    <div class="absolute left-0 top-0 bottom-0 w-px" style="background: linear-gradient(180deg,transparent 0%,#E8252C 40%,#E8252C 60%,transparent 100%); opacity: 0.5;"></div>
+
+    <!-- Centered content -->
+    <div class="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 py-24 text-center">
+      <div class="hero-1 flex items-center justify-center gap-3 mb-6">
+        <div class="waveform-line w-12"></div>
+        <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">Montreal's Premier Recording Studio</span>
+        <div class="waveform-line w-12"></div>
+      </div>
+
+      <h1 class="hero-2 font-display leading-none mb-6" style="font-size: clamp(3.5rem,7vw,6.5rem); letter-spacing: -0.02em;">
+        RECORDING<br/>
+        <span class="text-brand-red">STUDIO</span><br/>
+        IN MONTREAL
+      </h1>
+
+      <p class="hero-3 font-body text-white/70 text-lg mb-10 max-w-lg mx-auto" style="line-height: 1.75;">
+        Professional recording, mixing, and mastering for musicians and artists who demand the best. Your sound, perfected.
+      </p>
+
+      <div class="hero-3 flex flex-wrap justify-center gap-4 mb-16">
+        <a href="#contact"
+           class="btn-primary inline-flex items-center gap-2 px-8 py-4 bg-brand-red text-white font-heading font-semibold text-sm tracking-wider rounded transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+           style="box-shadow: 0 8px 32px rgba(232,37,44,0.4);">
+          Book a Session
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#services"
+           class="btn-outline inline-flex items-center gap-2 px-8 py-4 text-white font-heading font-semibold text-sm tracking-wider rounded border border-white/30 transition-colors duration-200 hover:border-brand-red hover:text-brand-red focus-visible:ring-2 focus-visible:ring-white/30">
+          Our Services
+        </a>
+      </div>
+
+      <!-- Stats row -->
+      <div class="hero-4 flex flex-wrap justify-center gap-12 pt-10 border-t border-white/15">
+        <div class="stat-item">
+          <div class="font-display text-3xl text-brand-red" style="letter-spacing:-0.02em">10+</div>
+          <div class="font-body text-white/50 text-sm mt-1">Years of Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="font-display text-3xl text-brand-red" style="letter-spacing:-0.02em">500+</div>
+          <div class="font-body text-white/50 text-sm mt-1">Tracks Produced</div>
+        </div>
+        <div class="stat-item">
+          <div class="font-display text-3xl text-brand-red" style="letter-spacing:-0.02em">200+</div>
+          <div class="font-body text-white/50 text-sm mt-1">Happy Artists</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator absolute bottom-8 left-1/2 flex flex-col items-center gap-2 opacity-40">
+      <span class="font-body text-xs tracking-[0.15em] uppercase text-white">Scroll</span>
+      <div class="w-px h-12" style="background: linear-gradient(180deg,#E8252C,transparent);"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SERVICES
+  ============================================================ -->
+  <section id="services" class="relative py-28 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <!-- Section header -->
+      <div class="reveal mb-16 max-w-xl">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">What We Offer</span>
+        </div>
+        <h2 class="font-display text-5xl leading-none mb-4" style="letter-spacing:-0.02em;">OUR SERVICES</h2>
+        <p class="font-body text-white/50 text-base" style="line-height:1.75;">Everything you need to take your music from idea to finished product, all under one roof.</p>
+      </div>
+
+      <!-- Services grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Card 1: Recording -->
+        <div class="reveal delay-1 service-card rounded p-7 cursor-default flex flex-col" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          <div class="w-12 h-12 rounded flex items-center justify-center mb-6" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-semibold mb-3">Recording</h3>
+          <p class="font-body text-white/50 text-sm flex-1" style="line-height:1.75;">World-class acoustics and gear to capture your performance with unmatched clarity and warmth.</p>
+          <div class="mt-6 pt-5 border-t border-white/08 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-brand-red text-sm font-heading font-medium cursor-pointer hover:gap-3 transition-all duration-200">
+              Learn more
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <button onclick="openRates('recording')" class="font-heading text-xs font-semibold tracking-wider uppercase text-white/40 hover:text-white transition-colors duration-200 focus-visible:outline-none border border-white/10 hover:border-white/30 px-3 py-1.5 rounded">
+              Rates
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2: Mixing — highlighted -->
+        <div class="reveal delay-2 service-card rounded p-7 cursor-default relative flex flex-col" style="background: rgba(232,37,44,0.08); border: 1px solid rgba(232,37,44,0.3); box-shadow: 0 4px 32px rgba(232,37,44,0.18);">
+          <div class="absolute top-4 right-4 px-2 py-0.5 rounded-full bg-brand-red text-white text-xs font-heading font-semibold tracking-wide">Popular</div>
+          <div class="w-12 h-12 rounded flex items-center justify-center mb-6" style="background: rgba(232,37,44,0.2); border: 1px solid rgba(232,37,44,0.35);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-semibold mb-3">Mixing</h3>
+          <p class="font-body text-white/50 text-sm flex-1" style="line-height:1.75;">Surgical balancing and creative processing that gives every element its perfect place in the mix.</p>
+          <div class="mt-6 pt-5 border-t border-white/08 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-brand-red text-sm font-heading font-medium cursor-pointer hover:gap-3 transition-all duration-200">
+              Learn more
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <button onclick="openRates('mixing')" class="font-heading text-xs font-semibold tracking-wider uppercase text-white/40 hover:text-white transition-colors duration-200 focus-visible:outline-none border border-white/10 hover:border-white/30 px-3 py-1.5 rounded">
+              Rates
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: Mastering -->
+        <div class="reveal delay-3 service-card rounded p-7 cursor-default flex flex-col" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          <div class="w-12 h-12 rounded flex items-center justify-center mb-6" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-semibold mb-3">Mastering</h3>
+          <p class="font-body text-white/50 text-sm flex-1" style="line-height:1.75;">Radio-ready loudness and translates perfectly across every platform and playback system.</p>
+          <div class="mt-6 pt-5 border-t border-white/08 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-brand-red text-sm font-heading font-medium cursor-pointer hover:gap-3 transition-all duration-200">
+              Learn more
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <button onclick="openRates('mastering')" class="font-heading text-xs font-semibold tracking-wider uppercase text-white/40 hover:text-white transition-colors duration-200 focus-visible:outline-none border border-white/10 hover:border-white/30 px-3 py-1.5 rounded">
+              Rates
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4: Production -->
+        <div class="reveal delay-4 service-card rounded p-7 cursor-default flex flex-col" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          <div class="w-12 h-12 rounded flex items-center justify-center mb-6" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="font-heading text-lg font-semibold mb-3">Production</h3>
+          <p class="font-body text-white/50 text-sm flex-1" style="line-height:1.75;">Full music production from beat creation to final arrangement. We help shape your artistic vision.</p>
+          <div class="mt-6 pt-5 border-t border-white/08 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-brand-red text-sm font-heading font-medium cursor-pointer hover:gap-3 transition-all duration-200">
+              Learn more
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <button onclick="openRates('production')" class="font-heading text-xs font-semibold tracking-wider uppercase text-white/40 hover:text-white transition-colors duration-200 focus-visible:outline-none border border-white/10 hover:border-white/30 px-3 py-1.5 rounded">
+              Rates
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+  ============================================================ -->
+  <section id="about" class="relative py-28 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+      <div style="position:absolute;bottom:-30%;right:-10%;width:60%;height:70%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.07) 0%,transparent 65%);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-20 items-center">
+      <!-- Left: image -->
+      <div class="reveal-left relative order-2 lg:order-1">
+        <div class="relative rounded overflow-hidden" style="aspect-ratio:1/1; box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);">
+          <img src="Images/Me.jpg" alt="Anthony Zappavigna — Founder of AZ Music Studios" class="w-full h-full object-cover" style="max-width: none;" />
+          <div class="absolute inset-0" style="background: linear-gradient(to top, #17182A 0%, rgba(23,24,42,0.2) 60%, transparent 100%);"></div>
+          <div class="absolute inset-0" style="background: rgba(232,37,44,0.05); mix-blend-mode: multiply;"></div>
+        </div>
+        <!-- Accent frame -->
+        <div class="absolute -bottom-4 -right-4 w-32 h-32 rounded" style="border: 2px solid rgba(232,37,44,0.3); z-index:-1;"></div>
+        <div class="absolute -top-4 -left-4 w-24 h-24 rounded" style="border: 1px solid rgba(112,130,155,0.2); z-index:-1;"></div>
+      </div>
+
+      <!-- Right: text -->
+      <div class="reveal-right order-1 lg:order-2">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">Our Story</span>
+        </div>
+        <h2 class="font-display text-5xl leading-none mb-6" style="letter-spacing:-0.02em;">ABOUT<br/><span class="text-brand-red">AZ MUSIC</span></h2>
+
+        <p class="font-body text-white/60 text-base mb-5" style="line-height:1.8;">
+          Founded in Montreal in 2016 by producer, songwriter, and engineer Anthony Zappavigna, AZ Music Studios was built on a single belief: every artist deserves a space where their creative vision can thrive without compromise.
+        </p>
+        <p class="font-body text-white/60 text-base mb-10" style="line-height:1.8;">
+          From emerging artists cutting their first demo to established acts putting the finishing touches on a full album, we've been the trusted partner for Montreal's most ambitious musicians.
+        </p>
+
+        <!-- Feature list -->
+        <ul class="space-y-4 mb-10">
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full bg-brand-red/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="font-body text-white/70 text-sm">From Neve pre-amps and compressors to Neumann U87 microphones and UAD output gear</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full bg-brand-red/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="font-body text-white/70 text-sm">Acoustically treated iso booth and control room</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-5 h-5 rounded-full bg-brand-red/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="font-body text-white/70 text-sm">Over 20 million streams worldwide</span>
+          </li>
+        </ul>
+
+        <a href="#contact"
+           class="btn-primary inline-flex items-center gap-2 px-8 py-4 bg-brand-red text-white font-heading font-semibold text-sm tracking-wider rounded transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+           style="box-shadow: 0 8px 32px rgba(232,37,44,0.4);">
+          Work With Us
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STUDIO SECTION (full-width accent)
+  ============================================================ -->
+  <section id="studio" class="relative py-28 overflow-hidden" style="background: rgba(232,37,44,0.06); border-top: 1px solid rgba(232,37,44,0.12); border-bottom: 1px solid rgba(232,37,44,0.12);">
+    <div class="absolute inset-0 pointer-events-none grain" aria-hidden="true"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="reveal text-center mb-16">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">The Space</span>
+          <div class="waveform-line w-8"></div>
+        </div>
+        <h2 class="font-display text-5xl leading-none mb-4" style="letter-spacing:-0.02em;">OUR STUDIO</h2>
+        <p class="font-body text-white/50 max-w-md mx-auto text-base" style="line-height:1.75;">State-of-the-art facilities designed to inspire creativity and deliver professional results.</p>
+      </div>
+
+      <!-- Studio photo grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="reveal delay-1 studio-panel relative rounded overflow-hidden col-span-2 lg:col-span-1" style="aspect-ratio:4/3; box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+          <img src="Images/Wide.jpg" alt="Control Room" class="w-full h-full object-cover" style="max-width:none;" />
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(23,24,42,0.8) 0%, transparent 60%);"></div>
+          <div class="studio-label absolute bottom-4 left-4 font-heading text-sm font-semibold text-white">Control Room</div>
+        </div>
+        <div class="reveal delay-2 studio-panel relative rounded overflow-hidden" style="aspect-ratio:4/3; box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+          <img src="Images/Mic.jpg" alt="Tracking Vocals & Instruments" class="w-full h-full object-cover" style="max-width:none;" />
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(23,24,42,0.8) 0%, transparent 60%);"></div>
+          <div class="studio-label absolute bottom-4 left-4 font-heading text-sm font-semibold text-white">Tracking Vocals / Instruments</div>
+        </div>
+        <div class="reveal delay-3 studio-panel relative rounded overflow-hidden" style="aspect-ratio:4/3; box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+          <img src="Images/Booth.jpg" alt="Iso Booth" class="w-full h-full object-cover" style="max-width:none;" />
+          <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(23,24,42,0.8) 0%, transparent 60%);"></div>
+          <div class="studio-label absolute bottom-4 left-4 font-heading text-sm font-semibold text-white">Iso Booth</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MUSIC
+  ============================================================ -->
+  <section id="music" class="relative py-28 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+      <div style="position:absolute;top:-10%;right:-5%;width:50%;height:60%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.06) 0%,transparent 65%);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+      <div class="reveal mb-14">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">Listen Now</span>
+        </div>
+        <h2 class="font-display text-5xl leading-none" style="letter-spacing:-0.02em;">OUR MUSIC</h2>
+      </div>
+
+      <!-- Spotify embeds grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- R&B -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">R&amp;B</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/0GepmWV766KcxPOYYRdgDT?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+        <!-- Rock-Pop -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">Rock-Pop</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/2gIgwwxU5NauJXNF0Uc9l3?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+        <!-- Folk-Pop -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">Folk-Pop</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/2oG5zzMtDMuzVa2B6BkiYJ?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+        <!-- Country-Rock -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">Country-Rock</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/3Q66KU6WOIB0sM7dHa6WQ4?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+        <!-- Pop -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">Pop</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/6Qnx91JzrW9sLYEQpMtahS?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+        <!-- Rap-Melodic -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">Rap-Melodic</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/2QDe5cxEePbz7C5MmIpXUc?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+        <!-- Rap -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">Rap</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/37trMP175VT9CZ8AdCAn2h?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+        <!-- Pop-EDM -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">Pop-EDM</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/3eB6sJGaVaIos4Rd7jx6Ld?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+        <!-- Cinematic-Pop -->
+        <div class="reveal music-card rounded-xl overflow-hidden" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);">
+          <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+            <span class="font-heading text-xs font-semibold tracking-[0.15em] uppercase text-brand-red">Cinematic-Pop</span>
+          </div>
+          <iframe style="border-radius:0 0 12px 12px; display:block;" src="https://open.spotify.com/embed/track/6vUzhw2CuLqmUyANP39HTA?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
+      </div>
+
+      <!-- Link to full profile -->
+      <div class="mt-10 flex justify-center">
+        <a href="https://open.spotify.com/playlist/3O7RPavUHOlHG6Uk1luBjk?si=8dac395917e449dd" target="_blank" rel="noopener"
+           class="inline-flex items-center gap-3 px-7 py-3.5 font-heading text-sm font-semibold text-white rounded border border-white/15 hover:border-brand-red hover:text-brand-red transition-colors duration-200"
+           style="box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          <!-- Spotify logo -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          Listen on Spotify
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CLIENTS
+  ============================================================ -->
+  <section id="clients" class="relative py-24 overflow-hidden" style="border-top: 1px solid rgba(255,255,255,0.06);">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+    </div>
+
+    <div class="reveal max-w-7xl mx-auto px-6 lg:px-8 mb-14 text-center">
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <div class="waveform-line w-8"></div>
+        <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">Who We've Worked With</span>
+        <div class="waveform-line w-8"></div>
+      </div>
+      <h2 class="font-display text-5xl leading-none" style="letter-spacing:-0.02em;">OUR CLIENTS</h2>
+    </div>
+
+    <!-- Marquee rows -->
+    <div class="relative" style="mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%); -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);">
+
+      <!-- Row 1 — scrolls left -->
+      <div class="flex overflow-hidden mb-4">
+        <div class="flex shrink-0 gap-0 animate-marquee-left">
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Universal Music</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Warner Music</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Sony Music</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Milagro Records</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Rico Rich Records</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Ced Auger</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Thomas Argouin</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Gabriel Fredette</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Boutot</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Doohdead</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Sans Pression</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Og Cyrus</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Racoon</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Cadiem</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">YG MEO</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Day Vee</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Sarcass</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">AZËE</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Jazara</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">LeMind</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Nick Eyra</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Runn</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Chandler Leighton</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Mario McFly</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Dee Joyce</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Reney Ray</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Racine</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Ziko</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Karelle Beaudoin</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Stunnin</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Kmax</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Joémi Verdon</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <!-- Duplicate for seamless loop -->
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Universal Music</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Warner Music</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Sony Music</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Milagro Records</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Rico Rich Records</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Ced Auger</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Thomas Argouin</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Gabriel Fredette</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Boutot</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Doohdead</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Sans Pression</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Og Cyrus</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Racoon</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Cadiem</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">YG MEO</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Day Vee</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Sarcass</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">AZËE</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Jazara</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">LeMind</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Nick Eyra</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Runn</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Chandler Leighton</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Mario McFly</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Dee Joyce</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Reney Ray</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Racine</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Ziko</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Karelle Beaudoin</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Stunnin</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Kmax</span><span class="text-brand-red opacity-50 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/70 px-5 whitespace-nowrap">Joémi Verdon</span><span class="text-brand-red opacity-50 self-center">·</span>
+        </div>
+      </div>
+
+      <!-- Row 2 — scrolls right -->
+      <div class="flex overflow-hidden">
+        <div class="flex shrink-0 gap-0 animate-marquee-right">
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Irdens Exantus</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Sandy Duperval</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Virginie Peloquin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Ariane Simard</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Erika Rollin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Salimo</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Nawfal</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Lydia Blouin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Marie-Pierre Leduc</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Yan Etchevary</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Alex Roy</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Sarah Fortin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Dan P</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Dclatt</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Barck</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Gwapo Mystizo</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Angela Maalouf</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Moritz</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Rory Hope</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Maeva Grelet</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Jihan Elo</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Shreez</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Ruffsound</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Lilou Morin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Komedza</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Elise Painchaud</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Back To The 80s Band</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Ruffneck</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Pete</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Farfadet</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Sins'99</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">St-Saoul</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Barck</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">3eb</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <!-- Duplicate for seamless loop -->
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Irdens Exantus</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Sandy Duperval</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Virginie Peloquin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Ariane Simard</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Erika Rollin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Salimo</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Nawfal</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Lydia Blouin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Marie-Pierre Leduc</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Yan Etchevary</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Alex Roy</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Sarah Fortin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Dan P</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Dclatt</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Barck</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Gwapo Mystizo</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Angela Maalouf</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Moritz</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Rory Hope</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Maeva Grelet</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Jihan Elo</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Shreez</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Ruffsound</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Lilou Morin</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Komedza</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Elise Painchaud</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Back To The 80s Band</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Ruffneck</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Pete</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Farfadet</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Sins'99</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">St-Saoul</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">Barck</span><span class="text-brand-red opacity-30 self-center">·</span>
+          <span class="font-heading text-sm font-semibold text-white/40 px-5 whitespace-nowrap">3eb</span><span class="text-brand-red opacity-30 self-center">·</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       REVIEWS
+  ============================================================ -->
+  <section id="reviews" class="relative py-28 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+      <div style="position:absolute;bottom:-20%;left:-5%;width:50%;height:60%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.06) 0%,transparent 65%);"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+      <!-- Header -->
+      <div class="reveal text-center mb-14">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">Client Reviews</span>
+          <div class="waveform-line w-8"></div>
+        </div>
+        <h2 class="font-display text-4xl md:text-5xl leading-none mb-4" style="letter-spacing:-0.02em;">SEE WHAT OUR CLIENTS HAVE TO SAY</h2>
+        <div class="flex items-center justify-center gap-2">
+          <div class="flex gap-0.5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          </div>
+          <span class="font-heading text-white/50 text-sm font-medium">5.0 · 77 reviews on Google</span>
+        </div>
+      </div>
+
+      <!-- Carousel -->
+      <div class="relative" id="reviews-carousel">
+        <!-- Cards wrapper -->
+        <div style="position:relative; min-height: 220px;" id="reviews-track">
+
+          <!-- Review 1 -->
+          <div class="review-card" data-index="0" style="position:absolute;inset:0;opacity:1;transform:translateX(0);transition:opacity 0.4s cubic-bezier(0.4,0,0.2,1),transform 0.4s cubic-bezier(0.4,0,0.2,1);">
+            <div class="rounded-xl p-8 md:p-10 flex flex-col gap-5" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,37,44,0.05);">
+              <p class="font-body text-white/75 text-base md:text-lg" style="line-height:1.8;">"I've been going there for a bit now and I can honestly say I'm happy to have landed on AZ Studios. I've made some of my best records with this producer! It's always a pleasure working with him!"</p>
+              <div class="flex items-center justify-between flex-wrap gap-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.07);">
+                <div class="flex items-center gap-3">
+                  <div class="flex gap-0.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-heading text-sm font-semibold text-white">Clover Dubbz (Clov)</div>
+                    <div class="font-body text-white/35 text-xs">Aug 8, 2021</div>
+                  </div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="review-card" data-index="1" style="position:absolute;inset:0;opacity:0;transform:translateX(60px);transition:opacity 0.4s cubic-bezier(0.4,0,0.2,1),transform 0.4s cubic-bezier(0.4,0,0.2,1);pointer-events:none;">
+            <div class="rounded-xl p-8 md:p-10 flex flex-col gap-5" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,37,44,0.05);">
+              <p class="font-body text-white/75 text-base md:text-lg" style="line-height:1.8;">"Le professionnalisme est à son maximum. Il est équipé non seulement en matériel mais aussi en expérience et en connaissance. Content de faire avec AZ Music!"</p>
+              <div class="flex items-center justify-between flex-wrap gap-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.07);">
+                <div class="flex items-center gap-3">
+                  <div class="flex gap-0.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-heading text-sm font-semibold text-white">Philip Saint-Louis</div>
+                    <div class="font-body text-white/35 text-xs">Aug 7, 2021</div>
+                  </div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="review-card" data-index="2" style="position:absolute;inset:0;opacity:0;transform:translateX(60px);transition:opacity 0.4s cubic-bezier(0.4,0,0.2,1),transform 0.4s cubic-bezier(0.4,0,0.2,1);pointer-events:none;">
+            <div class="rounded-xl p-8 md:p-10 flex flex-col gap-5" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,37,44,0.05);">
+              <p class="font-body text-white/75 text-base md:text-lg" style="line-height:1.8;">"AZ is a very skilled music producer/engineer that has a good vibe. If you've never been to this studio, try it out for yourself and see!"</p>
+              <div class="flex items-center justify-between flex-wrap gap-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.07);">
+                <div class="flex items-center gap-3">
+                  <div class="flex gap-0.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-heading text-sm font-semibold text-white">Gwapo Mystizo</div>
+                    <div class="font-body text-white/35 text-xs">Aug 7, 2021</div>
+                  </div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 4 -->
+          <div class="review-card" data-index="3" style="position:absolute;inset:0;opacity:0;transform:translateX(60px);transition:opacity 0.4s cubic-bezier(0.4,0,0.2,1),transform 0.4s cubic-bezier(0.4,0,0.2,1);pointer-events:none;">
+            <div class="rounded-xl p-8 md:p-10 flex flex-col gap-5" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,37,44,0.05);">
+              <p class="font-body text-white/75 text-base md:text-lg" style="line-height:1.8;">"Don't look anywhere else — this is the studio you want and deserve!!!"</p>
+              <div class="flex items-center justify-between flex-wrap gap-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.07);">
+                <div class="flex items-center gap-3">
+                  <div class="flex gap-0.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-heading text-sm font-semibold text-white">Genesam</div>
+                    <div class="font-body text-white/35 text-xs">Oct 24, 2019</div>
+                  </div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 5 -->
+          <div class="review-card" data-index="4" style="position:absolute;inset:0;opacity:0;transform:translateX(60px);transition:opacity 0.4s cubic-bezier(0.4,0,0.2,1),transform 0.4s cubic-bezier(0.4,0,0.2,1);pointer-events:none;">
+            <div class="rounded-xl p-8 md:p-10 flex flex-col gap-5" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,37,44,0.05);">
+              <p class="font-body text-white/75 text-base md:text-lg" style="line-height:1.8;">"Travail professionnel et belle ambiance. Très satisfait de ma visite."</p>
+              <div class="flex items-center justify-between flex-wrap gap-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.07);">
+                <div class="flex items-center gap-3">
+                  <div class="flex gap-0.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-heading text-sm font-semibold text-white">Amin B</div>
+                    <div class="font-body text-white/35 text-xs">Oct 24, 2019</div>
+                  </div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 6 -->
+          <div class="review-card" data-index="5" style="position:absolute;inset:0;opacity:0;transform:translateX(60px);transition:opacity 0.4s cubic-bezier(0.4,0,0.2,1),transform 0.4s cubic-bezier(0.4,0,0.2,1);pointer-events:none;">
+            <div class="rounded-xl p-8 md:p-10 flex flex-col gap-5" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,37,44,0.05);">
+              <p class="font-body text-white/75 text-base md:text-lg" style="line-height:1.8;">"Qualité de son et expérience incroyable! Selon moi, le meilleur studio de Montréal. Je recommande fortement ce studio pour la meilleure qualité et la meilleure expérience artiste/ingénieur!"</p>
+              <div class="flex items-center justify-between flex-wrap gap-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.07);">
+                <div class="flex items-center gap-3">
+                  <div class="flex gap-0.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-heading text-sm font-semibold text-white">Mitso</div>
+                    <div class="font-body text-white/35 text-xs">Oct 23, 2019</div>
+                  </div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 7 -->
+          <div class="review-card" data-index="6" style="position:absolute;inset:0;opacity:0;transform:translateX(60px);transition:opacity 0.4s cubic-bezier(0.4,0,0.2,1),transform 0.4s cubic-bezier(0.4,0,0.2,1);pointer-events:none;">
+            <div class="rounded-xl p-8 md:p-10 flex flex-col gap-5" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,37,44,0.05);">
+              <p class="font-body text-white/75 text-base md:text-lg" style="line-height:1.8;">"Meilleur studio de Montréal! Az est quelqu'un de vraiment passionné donnant les meilleures conseils et la meilleure qualité possible. Je recommande ce studio fortement pour tous ceux qui cherchent une qualité et une expérience remarquable!"</p>
+              <div class="flex items-center justify-between flex-wrap gap-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.07);">
+                <div class="flex items-center gap-3">
+                  <div class="flex gap-0.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-heading text-sm font-semibold text-white">Jimmy Minakakis</div>
+                    <div class="font-body text-white/35 text-xs">Oct 23, 2019</div>
+                  </div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Arrow buttons -->
+        <button id="reviews-prev" onclick="reviewsNav(-1)" aria-label="Previous review"
+          style="position:absolute;left:-24px;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s,border-color 0.2s;z-index:10;"
+          onmouseover="this.style.background='rgba(232,37,44,0.15)';this.style.borderColor='rgba(232,37,44,0.4)'"
+          onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.12)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
+        </button>
+        <button id="reviews-next" onclick="reviewsNav(1)" aria-label="Next review"
+          style="position:absolute;right:-24px;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s,border-color 0.2s;z-index:10;"
+          onmouseover="this.style.background='rgba(232,37,44,0.15)';this.style.borderColor='rgba(232,37,44,0.4)'"
+          onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.12)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,18 15,12 9,6"/></svg>
+        </button>
+      </div>
+
+      <!-- Dot indicators -->
+      <div class="flex justify-center gap-2 mt-8" id="reviews-dots">
+        <button onclick="reviewsGoTo(0)" class="review-dot" style="width:8px;height:8px;border-radius:50%;background:#E8252C;border:none;cursor:pointer;transition:transform 0.2s,background 0.2s;transform:scale(1.25);"></button>
+        <button onclick="reviewsGoTo(1)" class="review-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.25);border:none;cursor:pointer;transition:transform 0.2s,background 0.2s;"></button>
+        <button onclick="reviewsGoTo(2)" class="review-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.25);border:none;cursor:pointer;transition:transform 0.2s,background 0.2s;"></button>
+        <button onclick="reviewsGoTo(3)" class="review-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.25);border:none;cursor:pointer;transition:transform 0.2s,background 0.2s;"></button>
+        <button onclick="reviewsGoTo(4)" class="review-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.25);border:none;cursor:pointer;transition:transform 0.2s,background 0.2s;"></button>
+        <button onclick="reviewsGoTo(5)" class="review-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.25);border:none;cursor:pointer;transition:transform 0.2s,background 0.2s;"></button>
+        <button onclick="reviewsGoTo(6)" class="review-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.25);border:none;cursor:pointer;transition:transform 0.2s,background 0.2s;"></button>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        var current = 0;
+        var total = 7;
+        var cards = document.querySelectorAll('.review-card');
+        var dots = document.querySelectorAll('.review-dot');
+        var touchStartX = 0;
+
+        function updateTrackHeight() {
+          var inner = cards[current].firstElementChild;
+          if (inner) document.getElementById('reviews-track').style.minHeight = inner.offsetHeight + 'px';
+        }
+
+        function showReview(idx, dir) {
+          var outX = dir > 0 ? '-60px' : '60px';
+          var inX = dir > 0 ? '60px' : '-60px';
+          cards[current].style.opacity = '0';
+          cards[current].style.transform = 'translateX(' + outX + ')';
+          cards[current].style.pointerEvents = 'none';
+          dots[current].style.background = 'rgba(255,255,255,0.25)';
+          dots[current].style.transform = 'scale(1)';
+          current = (idx + total) % total;
+          cards[current].style.transform = 'translateX(' + inX + ')';
+          cards[current].style.opacity = '0';
+          cards[current].style.pointerEvents = '';
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              cards[current].style.opacity = '1';
+              cards[current].style.transform = 'translateX(0)';
+              updateTrackHeight();
+            });
+          });
+          dots[current].style.background = '#E8252C';
+          dots[current].style.transform = 'scale(1.25)';
+        }
+
+        window.reviewsNav = function(dir) { showReview(current + dir, dir); };
+        window.reviewsGoTo = function(idx) { showReview(idx, idx >= current ? 1 : -1); };
+
+        var carousel = document.getElementById('reviews-carousel');
+        carousel.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; }, { passive: true });
+        carousel.addEventListener('touchend', function(e) {
+          var dx = e.changedTouches[0].clientX - touchStartX;
+          if (Math.abs(dx) > 40) reviewsNav(dx < 0 ? 1 : -1);
+        }, { passive: true });
+
+        window.addEventListener('load', updateTrackHeight);
+        window.addEventListener('resize', updateTrackHeight);
+      })();
+    </script>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+  ============================================================ -->
+  <section id="contact" class="relative py-28 overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+      <div style="position:absolute;top:-20%;left:-5%;width:50%;height:60%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.07) 0%,transparent 65%);"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-20 items-start">
+      <!-- Left: info -->
+      <div class="reveal-left">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">Get In Touch</span>
+        </div>
+        <h2 class="font-display text-5xl leading-none mb-6" style="letter-spacing:-0.02em;">BOOK YOUR<br/><span class="text-brand-red">SESSION</span></h2>
+        <p class="font-body text-white/60 text-base mb-10" style="line-height:1.8;">
+          Ready to start your next project? Reach out and we'll get back to you within 24 hours to discuss your needs and set up a session.
+        </p>
+
+        <!-- Contact details -->
+        <div class="space-y-6">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded flex items-center justify-center flex-shrink-0" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="font-body text-white/40 text-xs mb-0.5">Email</div>
+              <a href="mailto:azmusicstudios1@gmail.com" class="font-heading text-sm font-medium text-white hover:text-brand-red transition-colors duration-200">azmusicstudios1@gmail.com</a>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded flex items-center justify-center flex-shrink-0" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="font-body text-white/40 text-xs mb-0.5">Location</div>
+              <span class="font-heading text-sm font-medium text-white">Montreal, Quebec, Canada</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded flex items-center justify-center flex-shrink-0" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+            </div>
+            <div>
+              <div class="font-body text-white/40 text-xs mb-0.5">Studio Hours</div>
+              <span class="font-heading text-sm font-medium text-white">Mon–Sun: 9AM – 11PM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: form -->
+      <div class="reveal-right rounded p-8 lg:p-10" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 16px 60px rgba(0,0,0,0.4);">
+        <form action="mailto:azmusicstudios1@gmail.com" method="post" enctype="text/plain" class="space-y-5">
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label class="font-heading text-xs font-semibold tracking-wide text-white/50 uppercase block mb-2">First Name</label>
+              <input type="text" placeholder="Anthony" class="form-input w-full rounded px-4 py-3 font-body text-sm text-white placeholder-white/25 transition-colors duration-200" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);" />
+            </div>
+            <div>
+              <label class="font-heading text-xs font-semibold tracking-wide text-white/50 uppercase block mb-2">Last Name</label>
+              <input type="text" placeholder="Zappavigna" class="form-input w-full rounded px-4 py-3 font-body text-sm text-white placeholder-white/25 transition-colors duration-200" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);" />
+            </div>
+          </div>
+          <div>
+            <label class="font-heading text-xs font-semibold tracking-wide text-white/50 uppercase block mb-2">Email</label>
+            <input type="email" placeholder="your@email.com" class="form-input w-full rounded px-4 py-3 font-body text-sm text-white placeholder-white/25 transition-colors duration-200" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);" />
+          </div>
+          <div>
+            <label class="font-heading text-xs font-semibold tracking-wide text-white/50 uppercase block mb-2">Service</label>
+            <select class="form-input w-full rounded px-4 py-3 font-body text-sm text-white/60 transition-colors duration-200" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);">
+              <option value="" disabled selected>Select a service...</option>
+              <option value="recording">Recording</option>
+              <option value="mixing">Mixing</option>
+              <option value="mastering">Mastering</option>
+              <option value="production">Production</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-heading text-xs font-semibold tracking-wide text-white/50 uppercase block mb-2">Message</label>
+            <textarea rows="4" placeholder="Tell us about your project..." class="form-input w-full rounded px-4 py-3 font-body text-sm text-white placeholder-white/25 transition-colors duration-200 resize-none" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);"></textarea>
+          </div>
+          <button type="submit"
+                  class="btn-primary w-full py-4 bg-brand-red text-white font-heading font-semibold text-sm tracking-wider rounded transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+                  style="box-shadow: 0 8px 32px rgba(232,37,44,0.4);">
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.2);">
+    <div style="border-bottom:1px solid rgba(255,255,255,0.06);" class="py-12">
+      <div class="max-w-xl mx-auto px-6 text-center">
+        <p class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red mb-2">Stay in the loop</p>
+        <h3 class="font-display text-2xl mb-2" style="letter-spacing:-0.01em;">JOIN THE MAILING LIST</h3>
+        <p class="font-body text-white/40 text-sm mb-6" style="line-height:1.7;">New releases, studio news, and exclusive content — straight to your inbox.</p>
+        <form id="mail-form" class="flex gap-2 max-w-sm mx-auto"
+              onsubmit="event.preventDefault();document.getElementById('subscribe-msg').style.display='block';this.reset();">
+          <input type="email" placeholder="your@email.com" required
+            class="flex-1 px-4 py-3 rounded font-body text-sm text-white placeholder-white/30 focus:outline-none"
+            style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:border-color 0.2s ease;"
+            onfocus="this.style.borderColor='#E8252C'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" />
+          <button type="submit"
+            class="px-5 py-3 bg-brand-red text-white font-heading font-semibold text-sm rounded hover:opacity-90"
+            style="transition:opacity 0.2s ease;box-shadow:0 4px 20px rgba(232,37,44,0.3);flex-shrink:0;">
+            Subscribe
+          </button>
+        </form>
+        <p id="subscribe-msg" class="font-body text-xs mt-3 text-brand-red" style="display:none;">You're on the list!</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="font-body text-white/30 text-sm text-center">© 2026 AZ Music Studios. All rights reserved. Montreal, QC.</p>
+      <div class="flex items-center gap-5">
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+        </a>
+        <!-- X / Twitter -->
+        <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red focus-visible:outline-none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       RATES MODAL
+  ============================================================ -->
+  <div id="rates-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 opacity-0 pointer-events-none" style="transition: opacity 0.25s ease;">
+    <!-- Backdrop -->
+    <div id="modal-backdrop" onclick="closeRates()" class="absolute inset-0" style="background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);"></div>
+
+    <!-- Panel -->
+    <div id="modal-panel" class="relative w-full max-w-md rounded-lg p-8 z-10" style="background: #1a1b2e; border: 1px solid rgba(232,37,44,0.2); box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05); transform: translateY(16px); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);">
+      <!-- Close -->
+      <button onclick="closeRates()" class="absolute top-4 right-4 text-white/30 hover:text-white transition-colors duration-200 focus-visible:outline-none">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <!-- Header -->
+      <div class="flex items-center gap-3 mb-2">
+        <div class="waveform-line w-6"></div>
+        <span id="modal-label" class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red"></span>
+      </div>
+      <h3 id="modal-title" class="font-display text-4xl leading-none mb-6" style="letter-spacing:-0.02em;"></h3>
+
+      <!-- Rates list -->
+      <ul id="modal-rates" class="space-y-3 mb-8"></ul>
+
+      <!-- CTA -->
+      <a href="#contact" onclick="closeRates()"
+         class="flex items-center justify-center gap-2 w-full py-3.5 bg-brand-red text-white font-heading font-semibold text-sm tracking-wider rounded transition-opacity duration-200 hover:opacity-90"
+         style="box-shadow: 0 8px 24px rgba(232,37,44,0.35);">
+        Book This Service
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <p class="text-center font-body text-white/30 text-xs mt-3">Rates are negotiable — contact us for custom packages.</p>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
+
+    const ratesData = {
+      recording: {
+        label: 'Recording',
+        title: 'RECORDING\nRATES',
+        rates: [
+          { name: 'Hourly Rate (2h minimum)', price: '$80 / hr' },
+          { name: 'Half Day (4 hrs)',          price: '$300' },
+          { name: 'Full Day (8 hrs)',          price: '$600' },
+          { name: 'Block Booking',             price: 'Contact us' },
+        ]
+      },
+      mixing: {
+        label: 'Mixing',
+        title: 'MIXING\nRATES',
+        rates: [
+          { name: 'Single (Mastering included)', price: '$250' },
+          { name: 'EP (up to 6 songs)',          price: 'Contact us' },
+          { name: 'Album (7+ songs)',             price: 'Contact us' },
+          { name: 'Stems included',              price: 'Contact us' },
+        ]
+      },
+      mastering: {
+        label: 'Mastering',
+        title: 'MASTERING\nRATES',
+        rates: [
+          { name: 'Single',             price: '$100 / track' },
+          { name: 'EP (up to 6 songs)', price: 'Contact us' },
+          { name: 'Album (7+ songs)',    price: 'Contact us' },
+          { name: 'Stem Mastering',     price: 'Contact us' },
+        ]
+      },
+      production: {
+        label: 'Production',
+        title: 'PRODUCTION\nRATES',
+        rates: [
+          { name: 'Beat Lease',      price: 'Contact us' },
+          { name: 'Exclusive Beat',  price: 'Contact us' },
+          { name: 'Full Production', price: 'Contact us' },
+          { name: 'Co-Production',   price: 'Contact us' },
+        ]
+      }
+    };
+
+    function openRates(service) {
+      const data = ratesData[service];
+      const modal = document.getElementById('rates-modal');
+      const panel = document.getElementById('modal-panel');
+
+      document.getElementById('modal-label').textContent = data.label + ' Rates';
+      document.getElementById('modal-title').innerHTML = data.title.replace('\n', '<br/>');
+
+      const list = document.getElementById('modal-rates');
+      list.innerHTML = data.rates.map(r => `
+        <li class="flex items-center justify-between py-3" style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <span class="font-body text-white/70 text-sm">${r.name}</span>
+          <span class="font-heading text-sm font-semibold text-brand-red">${r.price}</span>
+        </li>
+      `).join('');
+
+      modal.style.opacity = '1';
+      modal.style.pointerEvents = 'auto';
+      panel.style.transform = 'translateY(0)';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRates() {
+      const modal = document.getElementById('rates-modal');
+      const panel = document.getElementById('modal-panel');
+      modal.style.opacity = '0';
+      modal.style.pointerEvents = 'none';
+      panel.style.transform = 'translateY(16px)';
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRates(); });
+  </script>
+
+  <!-- Scroll reveal observer -->
+  <script>
+    (function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.10 });
+
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
+  </script>
+
+</body>
+</html>

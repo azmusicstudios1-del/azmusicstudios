@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services & Rates — AZ Music Studios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&family=Karla:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#17182A',
+              mid:  '#70829B',
+              red:  '#E8252C',
+            }
+          },
+          fontFamily: {
+            display: ['Anton', 'sans-serif'],
+            heading: ['Poppins', 'sans-serif'],
+            body:    ['Karla', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #17182A; }
+    ::-webkit-scrollbar-thumb { background: #E8252C; border-radius: 3px; }
+
+    html { scroll-behavior: smooth; }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: #E8252C;
+      transition: width 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    .social-icon { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease; }
+    .social-icon:hover { transform: scale(1.3); }
+
+    .waveform-line {
+      background: linear-gradient(90deg, transparent 0%, #E8252C 30%, #E8252C 70%, transparent 100%);
+      height: 2px;
+    }
+
+    /* Pricing card */
+    .pricing-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease, border-color 0.3s ease;
+    }
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      border-color: rgba(255,255,255,0.15);
+    }
+    .pricing-card.featured {
+      background: linear-gradient(135deg, rgba(232,37,44,0.12) 0%, rgba(232,37,44,0.05) 100%);
+      border-color: rgba(232,37,44,0.35);
+      box-shadow: 0 8px 40px rgba(232,37,44,0.18);
+    }
+    .pricing-card.featured:hover {
+      box-shadow: 0 24px 60px rgba(232,37,44,0.25);
+      border-color: rgba(232,37,44,0.5);
+    }
+
+    .benefit-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(232,37,44,0.18);
+      border: 1px solid rgba(232,37,44,0.35);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .benefit-x {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Scroll reveal */
+    .reveal, .reveal-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal.visible, .reveal-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* Page fade in */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page-hero { animation: fadeUp 0.8s cubic-bezier(0.4,0,0.2,1) 0.1s both; }
+
+    /* CTA button */
+    .btn-cta {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 100%; padding: 12px 24px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7);
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-cta:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.3);
+      color: white;
+    }
+    .btn-cta:active { transform: scale(0.97); }
+    .btn-cta.featured {
+      background: #E8252C;
+      border-color: #E8252C;
+      color: white;
+      box-shadow: 0 4px 20px rgba(232,37,44,0.4);
+    }
+    .btn-cta.featured:hover {
+      background: rgba(232,37,44,0.85);
+      border-color: rgba(232,37,44,0.85);
+    }
+
+    /* Add-on cards */
+    .addon-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .addon-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      border-color: rgba(232,37,44,0.2);
+    }
+  </style>
+</head>
+<body class="bg-brand-dark font-body text-white overflow-x-hidden">
+
+  <!-- ============================================================
+       NAVIGATION (same as index)
+  ============================================================ -->
+  <header id="top" class="fixed top-0 left-0 right-0 z-50" style="background: rgba(23,24,42,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(112,130,155,0.12);">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-28">
+      <!-- Logo -->
+      <a href="index.html" class="flex-shrink-0 block overflow-hidden" style="height: 76px; width: 240px;">
+        <img src="Brand_assets/Logo-White.png" alt="AZ Music Studios" style="height: 360px; width: auto; max-width: none; margin-top: -140px; margin-left: -109px;" />
+      </a>
+
+      <!-- Desktop nav links -->
+      <ul class="hidden md:flex items-center gap-8 font-heading text-sm font-medium tracking-wide text-white/70">
+        <li><a href="services.html" class="nav-link text-white transition-colors duration-200">Services</a></li>
+        <li><a href="about.html"   class="nav-link hover:text-white transition-colors duration-200">About</a></li>
+        <li><a href="studio.html" class="nav-link hover:text-white transition-colors duration-200">Studio</a></li>
+        <li><a href="music.html"   class="nav-link hover:text-white transition-colors duration-200">Music</a></li>
+        <li><a href="films.html" class="nav-link hover:text-white transition-colors duration-200">AZ Films</a></li>
+        <li><a href="courses.html"       class="nav-link hover:text-white transition-colors duration-200">Courses</a></li>
+        <li><a href="consultation.html" class="nav-link hover:text-white transition-colors duration-200">Consultation</a></li>
+        <li><a href="contact.html" class="nav-link hover:text-white transition-colors duration-200">Contact</a></li>
+      </ul>
+
+      <!-- CTA + Social -->
+      <div class="hidden md:flex flex-col items-end gap-2">
+        <a href="index.html#contact"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-red text-white text-sm font-heading font-semibold rounded tracking-wide transition-opacity duration-200 hover:opacity-90"
+           style="box-shadow: 0 4px 20px rgba(232,37,44,0.35);">
+          Book a Session
+        </a>
+        <div class="flex items-center gap-3">
+          <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+          </a>
+          <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Open menu">
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+        <span class="w-6 h-0.5 bg-white rounded"></span>
+      </button>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-6 font-heading text-sm font-medium space-y-4 text-white/80 border-t border-white/10 pt-4">
+      <a href="services.html" class="block text-white">Services</a>
+      <a href="about.html"   class="block hover:text-white transition-colors">About</a>
+      <a href="studio.html" class="block hover:text-white transition-colors">Studio</a>
+      <a href="courses.html"       class="block hover:text-white transition-colors">Courses</a>
+      <a href="consultation.html" class="block hover:text-white transition-colors">Consultation</a>
+      <a href="contact.html" class="block hover:text-white transition-colors">Contact</a>
+      <a href="index.html#contact" class="inline-block mt-2 px-5 py-2.5 bg-brand-red text-white rounded text-sm font-semibold tracking-wide">Book a Session</a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       PAGE HERO
+  ============================================================ -->
+  <section class="relative pt-52 pb-24 overflow-hidden">
+    <!-- Background glow -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:60%;height:60%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.08) 0%,transparent 65%);"></div>
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(112,130,155,0.2),transparent);"></div>
+    </div>
+
+    <div class="page-hero relative z-10 max-w-3xl mx-auto px-6 lg:px-8 text-center">
+      <div class="flex items-center justify-center gap-3 mb-5">
+        <div class="waveform-line w-10"></div>
+        <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">Transparent Pricing</span>
+        <div class="waveform-line w-10"></div>
+      </div>
+      <h1 class="font-display text-5xl md:text-6xl leading-none mb-5" style="letter-spacing:-0.02em;">
+        SERVICES &amp;<br/><span class="text-brand-red">RATES</span>
+      </h1>
+      <p class="font-body text-white/55 text-lg max-w-xl mx-auto" style="line-height:1.75;">
+        Professional recording, mixing, mastering, and production — all under one roof. No hidden fees.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRICING CARDS
+  ============================================================ -->
+  <section class="relative pb-28 overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Recording -->
+        <div class="reveal delay-1 pricing-card">
+          <!-- Icon -->
+          <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-6 flex-shrink-0" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+
+          <!-- Tier name -->
+          <div class="font-heading text-xs font-semibold tracking-[0.18em] uppercase text-brand-red mb-2">Recording</div>
+
+          <!-- Price -->
+          <div class="font-display text-4xl text-white mb-1" style="letter-spacing:-0.02em;">$80<span class="text-white/40 text-xl font-body font-normal">/hr</span></div>
+          <div class="font-body text-white/40 text-xs mb-6" style="border-bottom: 1px solid rgba(255,255,255,0.07); padding-bottom: 20px;">2 hour minimum</div>
+
+          <!-- Benefits -->
+          <div class="space-y-3 flex-1 mb-8">
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Hourly — $80/h</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Half day — $300</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Full day — $600</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Neve 1081 Pre-amp</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Neumann U87 mic</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Neve 2254/R Compressor</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Acoustic Guitars</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Electric Guitars</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Arturia Keylab 88 MKII</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Every plugin at your disposal</span>
+            </div>
+          </div>
+
+          <a href="index.html#contact" class="btn-cta">Book Now</a>
+        </div>
+
+        <!-- Mixing — featured -->
+        <div class="reveal delay-2 pricing-card featured relative">
+          <div class="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-brand-red text-white text-xs font-heading font-semibold tracking-wide">Popular</div>
+
+          <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-6 flex-shrink-0" style="background: rgba(232,37,44,0.2); border: 1px solid rgba(232,37,44,0.35);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </div>
+
+          <div class="font-heading text-xs font-semibold tracking-[0.18em] uppercase text-brand-red mb-2">Mixing</div>
+          <div class="font-display text-4xl text-white mb-1" style="letter-spacing:-0.02em;">$250</div>
+          <div class="font-body text-white/40 text-xs mb-6" style="border-bottom: 1px solid rgba(232,37,44,0.15); padding-bottom: 20px;">per single</div>
+
+          <div class="space-y-3 flex-1 mb-8">
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Single — $250</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Mastering included</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">EP / Album — Contact us</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Stem delivery</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Vocal Tuning (Melodyne)</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">3 Revisions included</span>
+            </div>
+          </div>
+
+          <a href="index.html#contact" class="btn-cta featured">Get Started</a>
+        </div>
+
+        <!-- Mastering -->
+        <div class="reveal delay-3 pricing-card">
+          <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-6 flex-shrink-0" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+          </div>
+
+          <div class="font-heading text-xs font-semibold tracking-[0.18em] uppercase text-brand-red mb-2">Mastering</div>
+          <div class="font-display text-4xl text-white mb-1" style="letter-spacing:-0.02em;">$100</div>
+          <div class="font-body text-white/40 text-xs mb-6" style="border-bottom: 1px solid rgba(255,255,255,0.07); padding-bottom: 20px;">per single</div>
+
+          <div class="space-y-3 flex-1 mb-8">
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Single — $100</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">EP / Album — Contact us</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Platform-ready loudness</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">WAV + MP3 delivery</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-x"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+              <span class="font-body text-white/35 text-sm">Custom packages — Contact us</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-x"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+              <span class="font-body text-white/35 text-sm">Vinyl prep — Contact us</span>
+            </div>
+          </div>
+
+          <a href="index.html#contact" class="btn-cta">Book Now</a>
+        </div>
+
+        <!-- Production -->
+        <div class="reveal delay-4 pricing-card">
+          <div class="w-11 h-11 rounded-lg flex items-center justify-center mb-6 flex-shrink-0" style="background: rgba(232,37,44,0.12); border: 1px solid rgba(232,37,44,0.2);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8252C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+
+          <div class="font-heading text-xs font-semibold tracking-[0.18em] uppercase text-brand-red mb-2">Production</div>
+          <div class="font-display text-4xl text-white mb-1" style="letter-spacing:-0.02em;">Custom</div>
+          <div class="font-body text-white/40 text-xs mb-6" style="border-bottom: 1px solid rgba(255,255,255,0.07); padding-bottom: 20px;">tailored to your project</div>
+
+          <div class="space-y-3 flex-1 mb-8">
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Beat creation</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Full arrangement</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Song writing support</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Rates — Contact us</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">EP / Album — Contact us</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="benefit-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#E8252C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span class="font-body text-white/65 text-sm">Mix &amp; master — Contact us</span>
+            </div>
+          </div>
+
+          <a href="index.html#contact" class="btn-cta">Contact Us</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ADD-ONS / EXTRAS
+  ============================================================ -->
+  <section class="relative py-20 overflow-hidden" style="border-top: 1px solid rgba(255,255,255,0.06);">
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div style="position:absolute;bottom:-20%;right:-5%;width:50%;height:60%;background:radial-gradient(ellipse at center,rgba(232,37,44,0.05) 0%,transparent 65%);"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+      <div class="reveal text-center mb-14">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <div class="waveform-line w-8"></div>
+          <span class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red">More Options</span>
+          <div class="waveform-line w-8"></div>
+        </div>
+        <h2 class="font-display text-4xl md:text-5xl leading-none" style="letter-spacing:-0.02em;">ADD-ONS &amp; EXTRAS</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div class="reveal delay-1 addon-card">
+          <div class="font-heading text-sm font-semibold text-white mb-1">Music Video / Reels</div>
+          <div class="font-body text-white/40 text-xs mb-3">Professional video production</div>
+          <div class="font-display text-2xl text-brand-red" style="letter-spacing:-0.01em;">Contact us</div>
+        </div>
+
+        <div class="reveal delay-2 addon-card">
+          <div class="font-heading text-sm font-semibold text-white mb-1">Instrumental / Beat</div>
+          <div class="font-body text-white/40 text-xs mb-3">Custom beat production</div>
+          <div class="font-display text-2xl text-brand-red" style="letter-spacing:-0.01em;">Contact us</div>
+        </div>
+
+        <div class="reveal delay-3 addon-card">
+          <div class="font-heading text-sm font-semibold text-white mb-1">Rush Delivery</div>
+          <div class="font-body text-white/40 text-xs mb-3">24–48 hr turnaround</div>
+          <div class="font-display text-2xl text-brand-red" style="letter-spacing:-0.01em;">Contact us</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA BAND
+  ============================================================ -->
+  <section class="relative py-24 overflow-hidden" style="background: rgba(232,37,44,0.06); border-top: 1px solid rgba(232,37,44,0.12); border-bottom: 1px solid rgba(232,37,44,0.12);">
+    <div class="reveal max-w-2xl mx-auto px-6 text-center">
+      <h2 class="font-display text-4xl md:text-5xl leading-none mb-5" style="letter-spacing:-0.02em;">
+        READY TO MAKE<br/><span class="text-brand-red">YOUR RECORD?</span>
+      </h2>
+      <p class="font-body text-white/55 text-base mb-8" style="line-height:1.75;">
+        Get in touch and we'll respond within 24 hours to set up your session.
+      </p>
+      <a href="index.html#contact"
+         class="inline-flex items-center gap-2 px-10 py-4 bg-brand-red text-white font-heading font-semibold text-sm tracking-wider rounded transition-opacity duration-200 hover:opacity-90"
+         style="box-shadow: 0 8px 32px rgba(232,37,44,0.4);">
+        Book a Session
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.2);">
+    <div style="border-bottom:1px solid rgba(255,255,255,0.06);" class="py-12">
+      <div class="max-w-xl mx-auto px-6 text-center">
+        <p class="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-brand-red mb-2">Stay in the loop</p>
+        <h3 class="font-display text-2xl mb-2" style="letter-spacing:-0.01em;">JOIN THE MAILING LIST</h3>
+        <p class="font-body text-white/40 text-sm mb-6" style="line-height:1.7;">New releases, studio news, and exclusive content — straight to your inbox.</p>
+        <form id="mail-form" class="flex gap-2 max-w-sm mx-auto"
+              onsubmit="event.preventDefault();document.getElementById('subscribe-msg').style.display='block';this.reset();">
+          <input type="email" placeholder="your@email.com" required
+            class="flex-1 px-4 py-3 rounded font-body text-sm text-white placeholder-white/30 focus:outline-none"
+            style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);transition:border-color 0.2s ease;"
+            onfocus="this.style.borderColor='#E8252C'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" />
+          <button type="submit"
+            class="px-5 py-3 bg-brand-red text-white font-heading font-semibold text-sm rounded hover:opacity-90"
+            style="transition:opacity 0.2s ease;box-shadow:0 4px 20px rgba(232,37,44,0.3);flex-shrink:0;">
+            Subscribe
+          </button>
+        </form>
+        <p id="subscribe-msg" class="font-body text-xs mt-3 text-brand-red" style="display:none;">You're on the list!</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="font-body text-white/30 text-sm text-center">© 2026 AZ Music Studios. All rights reserved. Montreal, QC.</p>
+      <div class="flex items-center gap-5">
+        <a href="https://www.instagram.com/azmusicstudios?igsh=bnJuOW5mOTFqOHB5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.facebook.com/share/1PXFc9gZhV/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@azmusicbeats" target="_blank" rel="noopener" aria-label="TikTok" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/azmusicstudios" target="_blank" rel="noopener" aria-label="YouTube" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98"/></svg>
+        </a>
+        <a href="https://x.com/azmusicstudios" target="_blank" rel="noopener" aria-label="X" class="social-icon text-white/40 hover:text-brand-red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile menu toggle -->
+  <script>
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
+
+  <!-- Scroll reveal -->
+  <script>
+    (function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.10 });
+      document.querySelectorAll('.reveal, .reveal-up').forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
+  </script>
+
+</body>
+</html>
