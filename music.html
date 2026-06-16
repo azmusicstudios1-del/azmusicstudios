@@ -481,5 +481,24 @@
     })();
   </script>
 
+  <script>
+    (function() {
+      var spotifyFrames = Array.from(document.querySelectorAll('iframe[src*="spotify.com"]'));
+      window.addEventListener('message', function(event) {
+        if (event.origin !== 'https://open.spotify.com') return;
+        try {
+          var data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+          if (data.type === 'playback_update' && data.payload && !data.payload.isPaused) {
+            spotifyFrames.forEach(function(frame) {
+              if (frame.contentWindow !== event.source) {
+                frame.contentWindow.postMessage({ command: 'pause' }, 'https://open.spotify.com');
+              }
+            });
+          }
+        } catch(e) {}
+      });
+    })();
+  </script>
+
 </body>
 </html>
