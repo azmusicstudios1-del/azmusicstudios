@@ -485,33 +485,50 @@
     (function() {
       var cards = Array.from(document.querySelectorAll('.music-card'));
 
-      function addOverlay(card) {
-        if (card.querySelector('.spotify-overlay')) return;
-        var ov = document.createElement('div');
-        ov.className = 'spotify-overlay';
-        ov.style.cssText = 'position:absolute;inset:0;z-index:10;cursor:pointer;';
-        card.style.position = 'relative';
-        card.appendChild(ov);
+      // Store each card's iframe data up front
+      var cardData = cards.map(function(card) {
+        var iframe = card.querySelector('iframe[src*="spotify.com"]');
+        return {
+          card: card,
+          src: iframe ? iframe.src : null,
+          iframeStyle: iframe ? (iframe.getAttribute('style') || '') : '',
+          iframeAllow: iframe ? (iframe.getAttribute('allow') || '') : ''
+        };
+      });
+
+      function showPlaceholder(data) {
+        var existing = data.card.querySelector('iframe');
+        if (existing) existing.remove();
+        if (data.card.querySelector('.sp-placeholder')) return;
+        var ph = document.createElement('div');
+        ph.className = 'sp-placeholder';
+        ph.style.cssText = 'height:152px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,0.03);border-radius:0 0 12px 12px;';
+        ph.innerHTML = '<svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="23" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none"/><polygon points="19,14 36,24 19,34" fill="rgba(255,255,255,0.75)"/></svg>';
+        ph.addEventListener('click', function() { activateCard(data); });
+        data.card.appendChild(ph);
       }
 
-      cards.forEach(addOverlay);
-
-      document.addEventListener('click', function(e) {
-        var ov = e.target.closest('.spotify-overlay');
-        if (!ov) return;
-        var clickedCard = ov.closest('.music-card');
-
-        // Stop all other iframes by reloading them
-        cards.forEach(function(card) {
-          if (card === clickedCard) return;
-          var iframe = card.querySelector('iframe');
-          if (iframe) { var s = iframe.src; iframe.src = ''; iframe.src = s; }
-          addOverlay(card);
+      function activateCard(activeData) {
+        // Replace all other cards with placeholders
+        cardData.forEach(function(data) {
+          if (data !== activeData) showPlaceholder(data);
         });
+        // Remove placeholder on active card and inject iframe
+        var ph = activeData.card.querySelector('.sp-placeholder');
+        if (ph) ph.remove();
+        if (activeData.card.querySelector('iframe')) return;
+        var iframe = document.createElement('iframe');
+        iframe.src = activeData.src;
+        iframe.setAttribute('style', activeData.iframeStyle);
+        iframe.width = '100%';
+        iframe.height = '152';
+        iframe.frameBorder = '0';
+        iframe.setAttribute('allow', activeData.iframeAllow);
+        activeData.card.appendChild(iframe);
+      }
 
-        // Remove overlay from clicked card so user can interact with Spotify
-        ov.remove();
-      });
+      // Start all cards as placeholders
+      cardData.forEach(showPlaceholder);
     })();
   </script>
 
