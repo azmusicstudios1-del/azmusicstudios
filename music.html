@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Music — AZ Music Studios</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -500,8 +503,8 @@
         if (data.card.querySelector('.sp-ph')) return;
         var ph = document.createElement('div');
         ph.className = 'sp-ph';
-        ph.style.cssText = 'height:152px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,0.03);border-radius:0 0 12px 12px;';
-        ph.innerHTML = '<svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="23" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none"/><polygon points="19,14 36,24 19,34" fill="rgba(255,255,255,0.75)"/></svg>';
+        ph.style.cssText = 'height:152px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(232,37,44,0.06);border-radius:0 0 12px 12px;';
+        ph.innerHTML = '<svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="23" stroke="rgba(232,37,44,0.4)" stroke-width="1.5" fill="none"/><polygon points="19,14 36,24 19,34" fill="rgba(232,37,44,0.9)"/></svg>';
         ph.addEventListener('click', function() { activateCard(data); });
         data.card.appendChild(ph);
       }
