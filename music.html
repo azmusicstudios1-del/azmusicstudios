@@ -483,9 +483,6 @@
 
   <script>
     (function() {
-      // Only apply on mobile — desktop keeps original iframes
-      if (!window.matchMedia('(max-width: 768px)').matches) return;
-
       var cards = Array.from(document.querySelectorAll('.music-card'));
 
       var cardData = cards.map(function(card) {
@@ -517,10 +514,7 @@
         if (ph) ph.remove();
         if (activeData.card.querySelector('iframe')) return;
         var iframe = document.createElement('iframe');
-        // autoplay=1 so song starts immediately on first tap
-        var src = activeData.src.replace('?', '?autoplay=1&').replace('utm_source=generator', 'utm_source=generator');
-        if (!src.includes('autoplay')) src += (src.includes('?') ? '&' : '?') + 'autoplay=1';
-        iframe.src = src;
+        iframe.src = activeData.src + '&autoplay=1';
         iframe.setAttribute('style', activeData.iframeStyle);
         iframe.width = '100%';
         iframe.height = '152';
