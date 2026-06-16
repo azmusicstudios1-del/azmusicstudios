@@ -483,19 +483,34 @@
 
   <script>
     (function() {
-      var spotifyFrames = Array.from(document.querySelectorAll('iframe[src*="spotify.com"]'));
-      window.addEventListener('message', function(event) {
-        if (event.origin !== 'https://open.spotify.com') return;
-        try {
-          var data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-          if (data.type === 'playback_update' && data.payload && !data.payload.isPaused) {
-            spotifyFrames.forEach(function(frame) {
-              if (frame.contentWindow !== event.source) {
-                frame.contentWindow.postMessage({ command: 'pause' }, 'https://open.spotify.com');
-              }
-            });
-          }
-        } catch(e) {}
+      var cards = Array.from(document.querySelectorAll('.music-card'));
+
+      function addOverlay(card) {
+        if (card.querySelector('.spotify-overlay')) return;
+        var ov = document.createElement('div');
+        ov.className = 'spotify-overlay';
+        ov.style.cssText = 'position:absolute;inset:0;z-index:10;cursor:pointer;';
+        card.style.position = 'relative';
+        card.appendChild(ov);
+      }
+
+      cards.forEach(addOverlay);
+
+      document.addEventListener('click', function(e) {
+        var ov = e.target.closest('.spotify-overlay');
+        if (!ov) return;
+        var clickedCard = ov.closest('.music-card');
+
+        // Stop all other iframes by reloading them
+        cards.forEach(function(card) {
+          if (card === clickedCard) return;
+          var iframe = card.querySelector('iframe');
+          if (iframe) { var s = iframe.src; iframe.src = ''; iframe.src = s; }
+          addOverlay(card);
+        });
+
+        // Remove overlay from clicked card so user can interact with Spotify
+        ov.remove();
       });
     })();
   </script>
