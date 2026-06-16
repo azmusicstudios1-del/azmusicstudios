@@ -483,25 +483,26 @@
 
   <script>
     (function() {
+      // Only apply on mobile — desktop keeps original iframes
+      if (!window.matchMedia('(max-width: 768px)').matches) return;
+
       var cards = Array.from(document.querySelectorAll('.music-card'));
 
-      // Store each card's iframe data up front
       var cardData = cards.map(function(card) {
         var iframe = card.querySelector('iframe[src*="spotify.com"]');
         return {
           card: card,
           src: iframe ? iframe.src : null,
-          iframeStyle: iframe ? (iframe.getAttribute('style') || '') : '',
-          iframeAllow: iframe ? (iframe.getAttribute('allow') || '') : ''
+          iframeStyle: iframe ? (iframe.getAttribute('style') || '') : ''
         };
       });
 
       function showPlaceholder(data) {
         var existing = data.card.querySelector('iframe');
         if (existing) existing.remove();
-        if (data.card.querySelector('.sp-placeholder')) return;
+        if (data.card.querySelector('.sp-ph')) return;
         var ph = document.createElement('div');
-        ph.className = 'sp-placeholder';
+        ph.className = 'sp-ph';
         ph.style.cssText = 'height:152px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,0.03);border-radius:0 0 12px 12px;';
         ph.innerHTML = '<svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="23" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none"/><polygon points="19,14 36,24 19,34" fill="rgba(255,255,255,0.75)"/></svg>';
         ph.addEventListener('click', function() { activateCard(data); });
@@ -509,25 +510,25 @@
       }
 
       function activateCard(activeData) {
-        // Replace all other cards with placeholders
         cardData.forEach(function(data) {
           if (data !== activeData) showPlaceholder(data);
         });
-        // Remove placeholder on active card and inject iframe
-        var ph = activeData.card.querySelector('.sp-placeholder');
+        var ph = activeData.card.querySelector('.sp-ph');
         if (ph) ph.remove();
         if (activeData.card.querySelector('iframe')) return;
         var iframe = document.createElement('iframe');
-        iframe.src = activeData.src;
+        // autoplay=1 so song starts immediately on first tap
+        var src = activeData.src.replace('?', '?autoplay=1&').replace('utm_source=generator', 'utm_source=generator');
+        if (!src.includes('autoplay')) src += (src.includes('?') ? '&' : '?') + 'autoplay=1';
+        iframe.src = src;
         iframe.setAttribute('style', activeData.iframeStyle);
         iframe.width = '100%';
         iframe.height = '152';
         iframe.frameBorder = '0';
-        iframe.setAttribute('allow', activeData.iframeAllow);
+        iframe.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
         activeData.card.appendChild(iframe);
       }
 
-      // Start all cards as placeholders
       cardData.forEach(showPlaceholder);
     })();
   </script>
